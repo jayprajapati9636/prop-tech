@@ -1,18 +1,13 @@
-
-import Login from './user/componet/Loging'
-import Register from './user/componet/Register'
-
-
+import Login from "./user/container/auth/Loging";
+import Register from "./user/container/auth/Register";
 
 function App() {
-
-
   return (
     <>
-     <Login />
-     <Register />
+      <Login />
+      <Register />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
