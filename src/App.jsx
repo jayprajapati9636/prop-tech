@@ -1,15 +1,14 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import AdminDashboard from "./Admin/pages/AdminDashboard";
-import Adminlogin from "./Admin/pages/Adminlogin";
+
+import Login from "./user/container/auth/Loging";
+import Register from "./user/container/auth/Register";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/adminlogin" element={<Adminlogin />} />
-      <Route path="/admindashboard" element={<AdminDashboard />} />
-    </Routes>
-  );
+    <>
+      <Login />
+      <Register />
+    </>
+
 }
 
 export default App;
