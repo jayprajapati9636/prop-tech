@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "../container/auth/Loging";
-import Register from "../container/auth/Register";
-import HomePage from "../container/page/Home";
+import Register from "../user/container/auth/Register";
+import Login from "../user/container/auth/Loging";
+import HomePage from "../user/container/page/Home";
 
-const Routerr = () => {
+const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -16,4 +16,4 @@ const Routerr = () => {
   );
 };
 
-export default Routerr;
+export default Router;
