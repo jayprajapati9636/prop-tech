@@ -1,14 +1,11 @@
 
-import Login from "./user/container/auth/Loging";
-import Register from "./user/container/auth/Register";
+import Router from "./router/Router";
+
 
 function App() {
   return (
-    <>
-      <Login />
-      <Register />
-    </>
-
+      <Router />
+  )
 }
 
 export default App;
