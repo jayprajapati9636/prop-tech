@@ -26,6 +26,7 @@ function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // images
   const properties = [
     {
       id: 1,
