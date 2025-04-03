@@ -1,12 +1,8 @@
-// Import necessary modules
-import { defineConfig } from 'vite'; 
-import react from '@vitejs/plugin-react'; // Import React plugin
-import tailwindcss from '@tailwindcss/vite'; // Import Tailwind CSS plugin
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-// Vite configuration
+// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(), // React plugin
-    tailwindcss(), // Tailwind CSS plugin
-  ],
+  plugins: [react(), tailwindcss()],
 });
