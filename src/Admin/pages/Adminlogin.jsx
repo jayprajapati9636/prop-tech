@@ -22,20 +22,31 @@ const AdminLogin = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   // Handle form submission
-  const onSubmit = (data) => {
-    // Normalize email input
+  const onSubmit = async (data) => {
     const email = data.email.trim().toLowerCase();
     const password = data.password;
-    
-    console.log("Normalized Email:", email);
-    console.log("Password:", password);
-    
-    // Simulated authentication (Replace with API call)
-    if (email === "admin@example.com" && password === "admin123") {
-      dispatch(loginAdmin({ email }));
+
+    try {
+      const response = await fetch("http://192.168.1.50:5001/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        alert(`Error: ${errorMessage}`);
+        return;
+      }
+
+      const result = await response.json();
+      dispatch(loginAdmin({ email: result.email, token: result.token }));
       navigate("/admindashboard");
-    } else {
-      alert("Invalid credentials!");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
