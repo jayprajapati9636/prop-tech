@@ -1,10 +1,26 @@
 import React, { useState } from "react";
-import {  TextField, Button, Typography, Box, Paper, Link, IconButton, InputAdornment } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  Link,
+  IconButton,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
+// Validation schema
 const signUpSchema = Yup.object({
   Name: Yup.string()
     .matches(/^[a-zA-Z\s]+$/, "Only letters and spaces are allowed")
@@ -18,29 +34,49 @@ const signUpSchema = Yup.object({
     .matches(/[0-9]/, "Password must have at least one number")
     .matches(/[!@#$%^&*]/, "Password must have at least one special character")
     .required("Password is required"),
-  Confirm_Password: Yup.string()
-    .oneOf([Yup.ref("Password"), null], "Passwords must match")
-    .required("Confirm Password is required"),
+ 
+  Role: Yup.string().required("Please select a role"),
+
 });
 
 const initialValues = {
   Name: "",
   Email: "",
   Password: "",
-  Confirm_Password: "",
+
+  Role: "",
 };
 
 const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { values, errors, handleBlur, handleChange, handleSubmit, touched } = useFormik({
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    resetForm,
+    setSubmitting
+  } = useFormik({
     initialValues,
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
-      console.log("Registered User:", values);
-      navigate("/login");
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("http://192.168.1.50:5001/api/user/register", values);
+        console.log("Server Response:", response.data);
+
+        resetForm();
+        navigate("/login");
+      } catch (error) {
+        console.error("Registration Error:", error.response?.data || error.message);
+        
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 
@@ -51,50 +87,78 @@ const Register = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <Paper elevation={6} sx={{ p: 4, width: 350, textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.8)" }}>
+      <Paper
+        elevation={6}
+        sx={{ p: 4, width: 350, textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.8)" }}
+      >
         <Typography variant="h5" gutterBottom>
-           Register
+          Register
         </Typography>
         <form onSubmit={handleSubmit}>
+          {/* Role */}
+          <FormControl
+            fullWidth
+            margin="normal"
+            error={touched.Role && Boolean(errors.Role)}
+          >
+            <InputLabel id="role-select-label">Select Role</InputLabel>
+            <Select
+              labelId="role-select-label"
+              name="Role"
+              value={values.Role}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              label="Select Role"
+            >
+              <MenuItem value="User">User</MenuItem>
+              <MenuItem value="Agent">Agent</MenuItem>
+            </Select>
+            {touched.Role && <FormHelperText>{errors.Role}</FormHelperText>}
+          </FormControl>
+
+          {/* Full Name */}
           <TextField
             fullWidth
             label="Full Name"
             margin="normal"
             variant="outlined"
-            value={values.Name}
             name="Name"
+            value={values.Name}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched.Name && Boolean(errors.Name)}
             helperText={touched.Name && errors.Name}
           />
 
+          {/* Email */}
           <TextField
             fullWidth
             label="Email"
             margin="normal"
             variant="outlined"
-            value={values.Email}
             name="Email"
+            value={values.Email}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched.Email && Boolean(errors.Email)}
             helperText={touched.Email && errors.Email}
           />
 
+          {/* Password */}
           <TextField
             fullWidth
             label="Password"
             type={showPassword ? "text" : "password"}
             margin="normal"
             variant="outlined"
-            value={values.Password}
             name="Password"
+            value={values.Password}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched.Password && Boolean(errors.Password)}
@@ -110,31 +174,15 @@ const Register = () => {
             }}
           />
 
-          <TextField
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
             fullWidth
-            label="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            margin="normal"
-            variant="outlined"
-            value={values.Confirm_Password}
-            name="Confirm_Password"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={touched.Confirm_Password && Boolean(errors.Confirm_Password)}
-            helperText={touched.Confirm_Password && errors.Confirm_Password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-            Register
+            sx={{ mt: 2 }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Registering..." : "Register"}
           </Button>
         </form>
 
