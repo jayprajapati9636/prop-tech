@@ -1,26 +1,51 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Paper, Link, IconButton, InputAdornment } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+  Link,
+  IconButton,
+  InputAdornment
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required")
 });
 
 const Login = () => {
-  const Navigate=useNavigate();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Login successful with", values);
-      Navigate("/homepage")
-    },
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("http://192.168.1.50:5001/api/user/login", values);
+        console.log("Login successful", response.data);
+        
+
+        navigate("/homepage");
+      } catch (error) {
+        console.error("Login error", error);
+        setErrorMessage(
+          error.response?.data?.message || "Login failed. Please try again."
+        );
+      }
+    }
   });
 
   return (
@@ -30,15 +55,25 @@ const Login = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "center"
       }}
     >
-      <Paper elevation={6} sx={{ p: 4, width: 350, textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.8)" }}>
+      <Paper
+        elevation={6}
+        sx={{
+          p: 4,
+          width: 350,
+          textAlign: "center",
+          bgcolor: "rgba(255, 255, 255, 0.8)"
+        }}
+      >
         <Typography variant="h5" gutterBottom>
           Login
         </Typography>
+
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
@@ -71,15 +106,27 @@ const Login = () => {
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+          {errorMessage && (
+            <Typography color="error" sx={{ mt: 1 }}>
+              {errorMessage}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
             Login
           </Button>
         </form>
+
         <Typography variant="body2" sx={{ mt: 2 }}>
-          <Link href="/forgot-password">Forgot Password?</Link>
+          <Link href="/forgot">Forgot Password?</Link>
         </Typography>
         <Typography variant="body2" sx={{ mt: 1 }}>
           Are you new? <Link href="/register">Register now</Link>
