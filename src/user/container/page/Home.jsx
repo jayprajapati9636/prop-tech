@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } from "@mui/material";
-import { motion } from "framer-motion";
+import Grid from '@mui/material/Grid';
+import { motion } from "framer-motion";  
 import CloseIcon from "@mui/icons-material/Close"; 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
+import { useNavigate } from "react-router-dom"; 
+import { Facebook as FacebookIcon, LinkedIn as LinkedInIcon, Twitter as TwitterIcon, Pinterest as PinterestIcon, Instagram as InstagramIcon } from '@mui/icons-material';
 
 function HomePage() {
   const propertyImages = [
@@ -18,6 +21,9 @@ function HomePage() {
 
   const [anchorEl, setAnchorEl] = useState(null); 
   const [openMenu, setOpenMenu] = useState(false); 
+  const navigate = useNavigate();
+  const propertiesButtonRef = useRef(null); // Use ref for the Properties button
+  const [isSliding, setIsSliding] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -92,9 +98,29 @@ function HomePage() {
     setOpenMenu(true);
   };
 
-  
   const handleMenuClose = () => {
     setOpenMenu(false);
+  };
+
+  const handleRegisterClick = () => {
+    console.log("Navigating to /register");
+    navigate("/register"); 
+    setOpenMenu(false); 
+  };
+
+  // Navigate to the Update Profile Page
+  const handleUpdateProfileClick = () => {
+    console.log("update-profile");
+    navigate("/update");
+    setOpenMenu(false); 
+  };
+
+  // Slide effect for Properties button
+  const handlePropertiesClick = () => {
+    setIsSliding(true); // Trigger the sliding effect
+    setTimeout(() => {
+      navigate("/properties"); // After the animation, navigate to the properties page
+    }, 2000); // Set the timeout to match the duration of the animation
   };
 
   return (
@@ -106,24 +132,21 @@ function HomePage() {
               Dreame Properties
             </Typography>
             <Button color="inherit">Home</Button>
-            <Button color="inherit">Properties</Button>
+            <Button color="inherit" ref={propertiesButtonRef} onClick={handlePropertiesClick}>
+              Properties
+            </Button>
             <Button color="inherit">Services</Button>
             <Button color="inherit">About Us</Button>
+            <Button color="inherit">Agent</Button>
 
-            {/* User Icon */}
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleMenuClick} 
-            >
+            <IconButton edge="end" color="inherit" onClick={handleMenuClick}>
               <AccountCircleIcon />
             </IconButton>
 
-      
             <Menu
               anchorEl={anchorEl}
               open={openMenu}
-              onClose={handleMenuClose} 
+              onClose={handleMenuClose}
               anchorOrigin={{
                 vertical: "top",
                 horizontal: "right",
@@ -133,8 +156,8 @@ function HomePage() {
                 horizontal: "right",
               }}
             >
-              <MenuItem onClick={handleMenuClose}>Register</MenuItem>
-
+              <MenuItem onClick={handleRegisterClick}>Registration</MenuItem>
+              <MenuItem onClick={handleUpdateProfileClick}>Update Profile</MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
@@ -176,180 +199,72 @@ function HomePage() {
         </Box>
       </Box>
 
-      <Box sx={{ padding: "50px", backgroundColor: "#f9f9f9" }}>
-        <Typography variant="h6" textAlign="center">Our Listings</Typography>
-        <Typography variant="h3" textAlign="center" fontWeight="bold">
-          Featured <span style={{ color: "#3f51b5" }}>Properties</span>
-        </Typography>
-        <Typography variant="body1" textAlign="center" color="textSecondary" mb={4}>
-          Explore our curated selection of properties for sale and rent, including residential, commercial, and luxury options.
-        </Typography>
+      {/* Properties List Section */}
+      <motion.div
+        initial={{ x: '100%' }}
+        animate={isSliding ? { x: 0 } : { x: '100%' }}
+        transition={{ duration: 2 }}
+        style={{ marginTop: '30px' }}
+      >
+        <Box sx={{ padding: "50px", backgroundColor: "#f9f9f9" }}>
+          <Typography variant="h6" textAlign="center">Our Listings</Typography>
+          <Typography variant="h3" textAlign="center" fontWeight="bold">
+            Featured <span style={{ color: "#3f51b5" }}>Properties</span>
+          </Typography>
+          <Typography variant="body1" textAlign="center" color="textSecondary" mb={4}>
+            Explore our curated selection of properties for sale and rent, including residential, commercial, and luxury options.
+          </Typography>
 
-        {properties.map((property) => (
-          <Box
-            key={property.id}
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              backgroundColor: "#ffffff",
-              borderRadius: "8px",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-              padding: "20px",
-              marginBottom: "15px",
-            }}
-          >
-            <Box sx={{ width: "30%", padding: "10px" }}>
-              <img
-                src={property.images[0]}
-                alt={property.title}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </Box>
-
-            <Box sx={{ width: "40%", padding: "10px" }}>
-              <Typography variant="h6" fontWeight="bold">{property.title}</Typography>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-                <Typography variant="body2">{property.bath}</Typography>
-                <Typography variant="body2">{property.bed}</Typography>
-                <Typography variant="body2">{property.size}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary" mt={1}>
-                {property.description}
-              </Typography>
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" color="primary">{property.rating}</Typography>
-              </Box>
-              <Box sx={{ mt: 2, textAlign: "center" }}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => handleViewDetails(property)}>
-                  View Details
-                </Button>
-              </Box>
-            </Box>
-
-            <Box sx={{ width: "25%", padding: "10px", textAlign: "center" }}>
-              <Typography variant="h6" fontWeight="bold">{property.price}</Typography>
-            </Box>
-          </Box>
-        ))}
-      </Box>
-
-      {/* Property Details Modal */}
-      {selectedProperty && (
-        <Box sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1000,
-        }}>
-          <Box sx={{
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            maxWidth: "800px",
-            width: "100%",
-            position: "relative",
-          }}>
-            {/* Close button (X Icon) */}
-            <IconButton
+          {properties.map((property) => (
+            <Box
+              key={property.id}
               sx={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                color: "gray",
-                fontSize: "30px",
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                backgroundColor: "#ffffff",
+                borderRadius: "8px",
+                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                padding: "20px",
+                marginBottom: "15px",
               }}
-              onClick={handleCloseDetails}
             >
-              <CloseIcon />
-            </IconButton>
+              <Box sx={{ width: "30%", padding: "10px" }}>
+                <img
+                  src={property.images[0]}
+                  alt={property.title}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </Box>
 
-            <Typography variant="h4" fontWeight="bold">{selectedProperty.title}</Typography>
-            <Typography variant="body2" color="textSecondary">{selectedProperty.description}</Typography>
-            <Typography variant="body2" color="textSecondary" mt={2}>
-              <strong>Price:</strong> {selectedProperty.price}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              <strong>Size:</strong> {selectedProperty.size}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              <strong>Bedrooms:</strong> {selectedProperty.bed}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              <strong>Bathrooms:</strong> {selectedProperty.bath}
-            </Typography>
-
-            {/* Image Gallery */}
-            <Box sx={{ display: "flex", overflowX: "auto", mt: 3 }}>
-              {selectedProperty.images.map((image, index) => (
-                <Box key={index} sx={{ minWidth: "250px", marginRight: "10px" }}>
-                  <img
-                    src={image}
-                    alt={`Property Image ${index + 1}`}
-                    style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "8px" }}
-                  />
+              <Box sx={{ width: "40%", padding: "10px" }}>
+                <Typography variant="h6" fontWeight="bold">{property.title}</Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+                  <Typography variant="body2">{property.bath}</Typography>
+                  <Typography variant="body2">{property.bed}</Typography>
+                  <Typography variant="body2">{property.size}</Typography>
                 </Box>
-              ))}
-            </Box>
+                <Typography variant="body2" color="textSecondary" mt={1}>
+                  {property.description}
+                </Typography>
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body2" color="primary">{property.rating}</Typography>
+                </Box>
+                <Box sx={{ mt: 2, textAlign: "center" }}>
+                  <Button variant="contained" color="primary" fullWidth onClick={() => handleViewDetails(property)}>
+                    View Details
+                  </Button>
+                </Box>
+              </Box>
 
-            <Box sx={{ textAlign: "center", marginTop: "20px", display: "flex", gap: "10px", alignItems: "center" }}>
-              
-              <Button variant="contained" color="secondary">
-                Buy
-              </Button>
+              <Box sx={{ width: "25%", padding: "10px", textAlign: "center" }}>
+                <Typography variant="h6" fontWeight="bold">{property.price}</Typography>
+              </Box>
             </Box>
-          </Box>
+          ))}
         </Box>
-      )}
-
-<div>
-  <div>
-    <h1 style={{textAlign: "center", fontSize: "35px", fontWeight: "bold", marginTop: "50px"}}>Our Service</h1>
-    <h6 style={{textAlign: "center", fontSize: "18px", paddingBottom: "40px", color: "#6c757d"}}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum sit ea nobis quae vero voluptatibus.</h6>
-
-    <div style={{display: "flex", justifyContent: "space-around", alignItems: "flex-start", flexWrap: "wrap", gap: "20px", padding: "0 20px"}}>
-      
-      <div style={{backgroundColor: "#f8f9fa", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", width: "22%", padding: "20px", textAlign: "center", transition: "transform 0.3s ease-in-out"}}>
-        <h1 style={{fontSize: "50px", color: "#ff4081"}}>img</h1>
-        <h3 style={{fontSize: "22px", fontWeight: "bold", color: "#333"}}>Quality Properties</h3>
-        <p style={{fontSize: "14px", color: "#6c757d", marginBottom: "20px"}}>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-        <a href="#" style={{textDecoration: "none", color: "blue", fontWeight: "bold"}}>Read more</a>
-      </div>
-
-      <div style={{backgroundColor: "#f8f9fa", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", width: "22%", padding: "20px", textAlign: "center", transition: "transform 0.3s ease-in-out"}}>
-        <h1 style={{fontSize: "50px", color: "#ff4081"}}>img</h1>
-        <h3 style={{fontSize: "22px", fontWeight: "bold", color: "#333"}}>Property for Sale</h3>
-        <p style={{fontSize: "14px", color: "#6c757d", marginBottom: "20px"}}>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-        <a href="#" style={{textDecoration: "none", color: "blue", fontWeight: "bold"}}>Read more</a>
-      </div>
-
-      <div style={{backgroundColor: "#f8f9fa", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", width: "22%", padding: "20px", textAlign: "center", transition: "transform 0.3s ease-in-out"}}>
-        <h1 style={{fontSize: "50px", color: "#ff4081"}}>img</h1>
-        <h3 style={{fontSize: "22px", fontWeight: "bold", color: "#333"}}>Top Rated Agent</h3>
-        <p style={{fontSize: "14px", color: "#6c757d", marginBottom: "20px"}}>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-        <a href="#" style={{textDecoration: "none", color: "blue", fontWeight: "bold"}}>Read more</a>
-      </div>
-
-      <div style={{backgroundColor: "#f8f9fa", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", width: "22%", padding: "20px", textAlign: "center", transition: "transform 0.3s ease-in-out"}}>
-        <h1 style={{fontSize: "50px", color: "#ff4081"}}>img</h1>
-        <h3 style={{fontSize: "22px", fontWeight: "bold", color: "#333"}}>House for Sale</h3>
-        <p style={{fontSize: "14px", color: "#6c757d", marginBottom: "20px"}}>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-        <a href="#" style={{textDecoration: "none", color: "blue", fontWeight: "bold"}}>Read more</a>
-      </div>
-
-    </div>
-  </div>
-</div>
-
+      </motion.div>
     </>
-
-    
   );
 }
 
