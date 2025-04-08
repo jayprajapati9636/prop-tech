@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaBars } from "react-icons/fa";
 
 const Header = ({ toggleSidebar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Toggle dropdown menu
+  // Toggle profile dropdown
   const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+    setShowDropdown((prev) => !prev);
   };
 
   // Close dropdown when clicking outside
@@ -24,28 +25,29 @@ const Header = ({ toggleSidebar }) => {
     };
   }, []);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear token or session
+    navigate("/adminlogin"); // Navigate to login page
+  };
+
   return (
-    <header className="bg-blue-600 text-white p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Sidebar Toggle Button */}
-        <button onClick={toggleSidebar} className="text-white text-2xl">
-          <FaBars />
-        </button>
-
-        {/* Logo or Title */}
-        <h1 className="text-2xl font-bold">Property Management</h1>
-
-        {/* Navigation Links */}
-        <nav className="space-x-6">
-          <Link to="/admindashboard" className="hover:underline">
-            Home
+    <header className="fixed top-0 left-0 w-full bg-blue-600 text-white shadow-md z-50">
+      <div className="px-4 py-3 flex items-center justify-between">
+        {/* Left: Sidebar toggle + Logo */}
+        <div className="flex items-center gap-4">
+          <button onClick={toggleSidebar} className="text-white text-2xl">
+            <FaBars />
+          </button>
+          <Link
+            to="/admindashboard"
+            className="text-xl font-bold tracking-wide text-white"
+          >
+            Tec.G Admin
           </Link>
-          <Link to="/about" className="hover:underline">
-            About
-          </Link>
-        </nav>
+        </div>
 
-        {/* Profile Icon with Dropdown */}
+        {/* Right: Profile Icon */}
         <div className="relative" ref={dropdownRef}>
           <button onClick={toggleDropdown} className="focus:outline-none">
             <FaUserCircle size={30} className="cursor-pointer" />
@@ -60,14 +62,12 @@ const Header = ({ toggleSidebar }) => {
               >
                 Profile
               </Link>
-             
-              <Link
-                to="/adminlogin"
-                className="block px-4 py-2 text-red-600 hover:bg-gray-200"
-                onClick={() => setShowDropdown(false)}
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500"
               >
                 Logout
-              </Link>
+              </button>
             </div>
           )}
         </div>
