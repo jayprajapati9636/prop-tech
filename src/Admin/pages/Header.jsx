@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaUserCircle, FaBars } from "react-icons/fa";
 
 const Header = ({ toggleSidebar }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate();
 
   // Toggle profile dropdown
   const toggleDropdown = () => {
@@ -25,12 +24,6 @@ const Header = ({ toggleSidebar }) => {
     };
   }, []);
 
-  // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Clear token or session
-    navigate("/adminlogin"); // Navigate to login page
-  };
-
   return (
     <header className="fixed top-0 left-0 w-full bg-blue-600 text-white shadow-md z-50">
       <div className="px-4 py-3 flex items-center justify-between">
@@ -43,7 +36,7 @@ const Header = ({ toggleSidebar }) => {
             to="/admindashboard"
             className="text-xl font-bold tracking-wide text-white"
           >
-            Tec.G Admin
+            Dreame Properties
           </Link>
         </div>
 
@@ -62,12 +55,6 @@ const Header = ({ toggleSidebar }) => {
               >
                 Profile
               </Link>
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500"
-              >
-                Logout
-              </button>
             </div>
           )}
         </div>
