@@ -10,9 +10,9 @@ import Header from "../Admin/pages/Header";
 import Properties from "../Admin/components/Properties"
 import About from "../Admin/pages/About";
 import UserAboutpage from "../user/container/page/aboutpage";
-import Agent from "../agent/agent";
 import Forgot from "../user/container/auth/Forgot";
-import Update from "../user/container/auth/Update-profile";
+import Navbar from "../user/container/page/Navbar";
+import Prop from "../user/container/page/Prop";
 
 
 const Router = () => {
@@ -22,14 +22,13 @@ const Router = () => {
         {/* User Routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/userabout" element={< UserAboutpage />} />
-        <Route path="/agent" element={<Agent />} />
+        <Route path="/prop" element={< Prop/>} />
         <Route path="/forgot" element={<Forgot />} />
-        <Route path="/update" element={<Update />} />
-        
-        
-        
+        <Route path="/navbar" element={<Navbar />} />
+ 
+
         {/* User Routes End */}
 
         {/* Admin Routes */}
