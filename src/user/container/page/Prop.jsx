@@ -1,132 +1,76 @@
-import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Grid, Button, Box } from '@mui/material';
-
-const Prop = () => {
-  const properties = [
-    {
-      type: "Modern Smart Home",
-      description: "A state-of-the-art smart home with advanced automation and energy-saving features. Ideal for modern living.",
-      price: "$1,500,000",
-      size: "2500 sq.ft",
-      bed: "2 bed",
-      bath: "3 bath",
-      rating: "(4.9/5.0)",
-      flooring: "Hardwood",
-      furnishing: "Fully Furnished",
-      landmark: "Near Central Park",
-      images: ["/Image/Home1.jpg", "/Image/Home1.jpg", "/Image/Home1.jpg"]
-    },
-    {
-      type: "Resort",
-      description: "A luxury resort with serene views and world-class amenities.",
-      price: "$3,000,000",
-      size: "5000 sq.ft",
-      bed: "8 rooms",
-      bath: "6 baths",
-      rating: "(4.9/5.0)",
-      flooring: "Tiled",
-      furnishing: "Fully Furnished",
-      landmark: "Near Beachfront",
-      images: ["/Image/Resort1.jpg", "/Image/Resort1.jpg", "/Image/Resort1.jpg"]
-    },
-    {
-      type: "Luxury Apartment",
-      description: "A luxury apartment located in the heart of the city, with panoramic views and premium amenities.",
-      price: "$850,000",
-      size: "1800 sq.ft",
-      bed: "3 bed",
-      bath: "2 bath",
-      rating: "(5.0/5.0)",
-      flooring: "Marble",
-      furnishing: "Partially Furnished",
-      landmark: "Near Downtown Mall",
-      images: ["/Image/Ap1.jpg", "/Image/Ap1.jpg", "/Image/Ap1.jpg" ]
-    },
-    {
-      type: "Commercial Office Space",
-      description: "A premium office space in a prime business location with modern facilities and excellent accessibility.",
-      price: "$2,000,000",
-      size: "3500 sq.ft",
-      bed: "5 offices",
-      bath: "3 bath",
-      rating: "(4.8/5.0)",
-      flooring: "Carpeted",
-      furnishing: "Unfurnished",
-      landmark: "Opposite City Bank Tower",
-      images: ["/Image/img.jpg", "/Image/img.jpg", "/Image/img.jpg"]
-    }
-  ];
-
-  // Group properties by type (e.g., Modern Smart Homes, Resorts, etc.)
-  const groupedProperties = properties.reduce((acc, property) => {
-    const { type } = property;
-    if (!acc[type]) acc[type] = [];
-    acc[type].push(property);
-    return acc;
-  }, {});
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Navbar from './Navbar';
+ 
+const PropertyListings = () => {
+  const [propertyData, setPropertyData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+ 
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const token = localStorage.getItem('token');
+ 
+        if (!token) {
+          throw new Error('No token found. Please log in.');
+        }
+ 
+        const response = await axios.get('http://192.168.1.30:5001/api/user/property-list', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+ 
+        setPropertyData(response.data);
+      } catch (err) {
+        console.error('Failed to fetch properties:', err);
+        setError(err.message || 'Failed to load properties');
+      } finally {
+        setLoading(false);
+      }
+    };
+ 
+    fetchProperties();
+  }, []);
+ 
+  if (loading) return <p className="text-gray-500">Loading properties...</p>;
+  if (error) return <p className="text-red-600">Error: {error}</p>;
+ 
   return (
-    <div style={{ padding: '20px' }}>
-      {Object.keys(groupedProperties).map((propertyType) => (
-        <Box key={propertyType} mb={4}>
-          <Typography variant="h4" gutterBottom>
-            {propertyType}
-          </Typography>
-          <Grid container spacing={4}>
-            {groupedProperties[propertyType].map((property, propertyIndex) => (
-              property.images.map((img, imgIndex) => (
-                <Grid item xs={12} sm={6} md={4} key={`${propertyIndex}-${imgIndex}`}>
-                  <Card sx={{ maxWidth: 345, boxShadow: 3 }}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={img}
-                      alt={property.type}
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" component="div">
-                        {property.type}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" mb={2}>
-                        {property.description}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Price:</strong> {property.price}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Size:</strong> {property.size}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Bedrooms:</strong> {property.bed}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Bathrooms:</strong> {property.bath}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Rating:</strong> {property.rating}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Flooring:</strong> {property.flooring}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Furnishing:</strong> {property.furnishing}
-                      </Typography>
-                      <Typography variant="body2" paragraph>
-                        <strong>Landmark:</strong> {property.landmark}
-                      </Typography>
-                      <Button size="small" variant="contained" color="primary">
-                        Contact Agent
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))
-            ))}
-          </Grid>
-        </Box>
-      ))}
+  
+    <>
+
+    <Navbar />
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Property Listings</h2>
+ 
+      {propertyData.length === 0 ? (
+        <p className="text-gray-600">No properties found.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {propertyData.map((property, index) => (
+            <div key={index} className="bg-white p-4 rounded shadow-md">
+              {property.image && (
+                <img
+                  src={property.image}
+                  alt={property.name}
+                  className="w-full h-40 object-cover rounded mb-3"
+                />
+              )}
+              <h3 className="text-xl font-semibold">{property.name}</h3>
+              <p className="text-gray-700 mb-2">{property.address}</p>
+              
+            </div>
+          ))}
+        </div>
+      )}
     </div>
+
+    </>
   );
 };
-
-export default Prop;
+ 
+export default PropertyListings;
+  
+ 

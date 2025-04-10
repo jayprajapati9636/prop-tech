@@ -75,7 +75,7 @@ const Register = () => {
 
 
       try {
-        const response = await axios.post("http://192.168.1.50:5001/api/user/register", payload);
+        const response = await axios.post("http://192.168.1.30:5001/api/user/register", payload);
         console.log("Server Response:", response.data);
 
         resetForm();
