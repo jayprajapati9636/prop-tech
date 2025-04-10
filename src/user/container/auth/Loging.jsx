@@ -33,12 +33,21 @@ const Login = () => {
     initialValues: { email: "", password: "" },
     validationSchema,
     onSubmit: async (values) => {
+
+      console.log(values , ":values")
+
+      const payload = {
+        email: values.email,  
+        password: values.password, 
+      };
+      
+
       try {
-        const response = await axios.post("http://192.168.1.50:5001/api/user/login", values);
+        const response = await axios.post("http://192.168.1.50:5001/api/user/login", payload);
         console.log("Login successful", response.data);
         
 
-        navigate("/homepage");
+        navigate("/");
       } catch (error) {
         console.error("Login error", error);
         setErrorMessage(

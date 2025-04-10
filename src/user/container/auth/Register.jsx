@@ -35,7 +35,7 @@ const signUpSchema = Yup.object({
     .matches(/[!@#$%^&*]/, "Password must have at least one special character")
     .required("Password is required"),
  
-  Role: Yup.string().required("Please select a role"),
+  
 
 });
 
@@ -43,8 +43,6 @@ const initialValues = {
   Name: "",
   Email: "",
   Password: "",
-
-  Role: "",
 };
 
 const Register = () => {
@@ -65,8 +63,19 @@ const Register = () => {
     initialValues,
     validationSchema: signUpSchema,
     onSubmit: async (values) => {
+
+      console.log(values , ":values")
+
+      const payload = {
+        name: values?.Name,
+        email: values?.Email,
+        password: values?.Password,
+      }
+
+
+
       try {
-        const response = await axios.post("http://192.168.1.50:5001/api/user/register", values);
+        const response = await axios.post("http://192.168.1.50:5001/api/user/register", payload);
         console.log("Server Response:", response.data);
 
         resetForm();
@@ -101,27 +110,7 @@ const Register = () => {
           Register
         </Typography>
         <form onSubmit={handleSubmit}>
-          {/* Role */}
-          <FormControl
-            fullWidth
-            margin="normal"
-            error={touched.Role && Boolean(errors.Role)}
-          >
-            <InputLabel id="role-select-label">Select Role</InputLabel>
-            <Select
-              labelId="role-select-label"
-              name="Role"
-              value={values.Role}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              label="Select Role"
-            >
-              <MenuItem value="User">User</MenuItem>
-              <MenuItem value="Agent">Agent</MenuItem>
-            </Select>
-            {touched.Role && <FormHelperText>{errors.Role}</FormHelperText>}
-          </FormControl>
-
+          
           {/* Full Name */}
           <TextField
             fullWidth

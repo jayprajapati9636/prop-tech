@@ -10,6 +10,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../page/Navbar";
 
 const signUpSchema = Yup.object({
   Name: Yup.string()
@@ -60,6 +61,8 @@ const Register = () => {
         backgroundPosition: "center",
       }}
     >
+
+      <Navbar />
       <Paper elevation={6} sx={{ p: 4, width: 350, textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.8)" }}>
         <Typography variant="h5" gutterBottom>
           Update Profile
