@@ -2,19 +2,16 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginAdmin } from "../../redux/features/authSlice";
 import axios from "axios";
 
-// Validation schema
+// ✅ Validation schema
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
 const AdminLogin = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const {
@@ -28,21 +25,20 @@ const AdminLogin = () => {
     const password = data.password;
 
     try {
-      const response = await axios.post("http://192.168.1.50:5001/api/admin/login", {
+      const response = await axios.post("http://192.168.1.30:5001/api/admin/login", {
         email,
         password,
       });
 
       const result = response.data;
 
-      // Store in Redux
-      dispatch(loginAdmin({ email: result.email, token: result.token }));
-
-      // Store in localStorage (optional)
+      // ✅ Store token and email locally
       localStorage.setItem("adminToken", result.token);
-      localStorage.setItem("adminEmail", result.email);
+      localStorage.setItem("adminEmail", result.email); // Make sure your backend returns this
 
-      // Navigate to dashboard
+      console.log("Stored admin email:", result.email); // ✅ Debug
+
+      // ✅ Navigate to dashboard
       navigate("/admindashboard");
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Please try again.";
@@ -91,7 +87,6 @@ const AdminLogin = () => {
               {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
 
-            {/* Remember Me and Forgot Password */}
             <div className="flex justify-between text-sm text-gray-600">
               <label>
                 <input type="checkbox" className="mr-1" /> Remember me
@@ -99,7 +94,6 @@ const AdminLogin = () => {
               <a href="#" className="text-purple-700">Forgot Password?</a>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700"

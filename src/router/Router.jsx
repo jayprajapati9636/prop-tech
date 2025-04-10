@@ -20,7 +20,7 @@ import BrokerDashboard from "../Broker/components/BrokerDashboard";
 import BrokerNavbar from "../Broker/components/BrokerNavbar";
 import BrokerSidebar from "../Broker/components/BrokerSidebar";
 import BrokerProperties from "../Broker/pages/BrokerProperties";
-import AddProperties from "../Broker/pages/AddProperties";
+import AddProperty from "../Broker/pages/AddProperty"
 
 const Router = () => {
   return (
@@ -58,7 +58,7 @@ const Router = () => {
         <Route path="/brokernavbar" element={<BrokerNavbar />}/>
         <Route path="/brokersidebar" element={<BrokerSidebar />}/>
         <Route path="/brokerproperties" element={<BrokerProperties />}/>
-        <Route path="/addproperties" element={<AddProperties />}/>
+        <Route path="/addproperty" element={<AddProperty />}/>
 
 
 
