@@ -7,13 +7,23 @@ import Adminlogin from "../Admin/pages/Adminlogin";
 import AdminDashboard from "../Admin/pages/AdminDashboard";
 import Profile from "../Admin/pages/Profile";
 import Header from "../Admin/pages/Header";
-import Properties from "../Admin/components/Properties"
+import AdminProperties from "../Admin/components/AdminProperties";
 import About from "../Admin/pages/About";
 import Service from "../user/container/page/Service";
 import Forgot from "../user/container/auth/Forgot";
 import Navbar from "../user/container/page/Navbar";
 import Prop from "../user/container/page/Prop";
 
+// Broker Imports
+import BrokerRegister from "../Broker/pages/BrokerRegister";
+import BrokerLogin from "../Broker/pages/BrokerLogin";
+import BrokerDashboard from "../Broker/components/BrokerDashboard";
+import BrokerNavbar from "../Broker/components/BrokerNavbar";
+import BrokerSidebar from "../Broker/components/BrokerSidebar";
+import BrokerProperties from "../Broker/pages/BrokerProperties";
+import AddProperties from "../Broker/pages/AddProperties";
+
+// Admin Routes
 
 
 const Router = () => {
@@ -24,12 +34,10 @@ const Router = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/service" element={<Service />}/>
-        <Route path="/prop" element={< Prop/>} />
+        <Route path="/userabout" element={<UserAboutpage />} />
+        <Route path="/prop" element={<Prop />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/navbar" element={<Navbar />} />
- 
-
         {/* User Routes End */}
 
         {/* Admin Routes */}
@@ -37,9 +45,20 @@ const Router = () => {
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/header" element={<Header />} />
-        <Route path="/properties" element={<Properties />}/>
-        <Route path="/about" element={<About />}/>
+        <Route path="/Adminproperties" element={<AdminProperties />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/customers" element={<Customer />} />
         {/* Admin Routes End */}
+
+        {/* Broker Routes */}
+        <Route path="/brokerregister" element={<BrokerRegister />} />
+        <Route path="/brokerlogin" element={<BrokerLogin />} />
+        <Route path="/brokerdashboard" element={<BrokerDashboard />} />
+        <Route path="/brokernavbar" element={<BrokerNavbar />} />
+        <Route path="/brokersidebar" element={<BrokerSidebar />} />
+        <Route path="/brokerproperties" element={<BrokerProperties />} />
+        <Route path="/addproperties" element={<AddProperties />} />
+        {/* Broker Routes End */}
       </Routes>
     </BrowserRouter>
   );

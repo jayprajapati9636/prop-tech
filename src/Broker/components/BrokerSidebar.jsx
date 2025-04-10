@@ -2,28 +2,24 @@ import React, { useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
-  FaBuilding,
-  FaUsers,
-  FaChartPie,
+  FaPlus,
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const Sidebar = ({ isOpen, closeSidebar }) => {
-  const navigate = useNavigate();
+const BrokerSidebar = ({ isOpen, closeSidebar }) => {
+  const navigate = useNavigate(); 
   const location = useLocation();
   const sidebarRef = useRef(null);
 
   const navItems = [
-    { label: "Dashboard", icon: <FaHome size={20} />, path: "/admindashboard" },
-    { label: "Properties", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
-    { label: "Customers", icon: <FaUsers size={20} />, path: "/customers" },
-    { label: "Reports", icon: <FaChartPie size={20} />, path: "/reports" },
+    { label: "Dashboard", icon: <FaHome size={20} />, path: "/brokerdashboard" },
+    { label: "AddProperty", icon: <FaPlus size={20} />, path: "/addproperties" },
   ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar();
+        closeSidebar && closeSidebar();
       }
     };
 
@@ -32,10 +28,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
   }, [closeSidebar]);
 
   const handleLogout = () => {
-    // Clear localStorage/sessionStorage or any auth logic
-    localStorage.removeItem("token"); // or sessionStorage.removeItem("token")
-    // Redirect to login page
-    navigate("/adminlogin");
+    localStorage.removeItem("brokerToken");
+    navigate("/brokerlogin");
   };
 
   return (
@@ -44,18 +38,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       className={`fixed top-0 left-0 h-full bg-white shadow-lg border-r border-gray-200 transition-all duration-300 z-50 ${
         isOpen ? "w-72" : "w-20"
       }`}
-    > 
-      {/* <div className="p-6">
-        <h2
-          className={`text-xl font-bold text-blue-600 transition-all duration-300 ${
-            !isOpen && "text-center text-sm"
-          }`}
-        >
-          {isOpen ? "Property Managment" : "MG"}
-        </h2>
-      </div> */}
-
-      <ul className="space-y-2 px-2">
+    >
+      <ul className="space-y-2 px-2 pt-6">
         {navItems.map((item, index) => (
           <li
             key={index}
@@ -84,4 +68,4 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
   );
 };
 
-export default Sidebar;
+export default BrokerSidebar;
