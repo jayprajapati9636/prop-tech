@@ -43,17 +43,20 @@ const Login = () => {
       
 
       try {
-        const response = await axios.post("http://192.168.1.50:5001/api/user/login", payload);
-        console.log("Login successful", response.data);
-        
+  const response = await axios.post("http://192.168.1.30:5001/api/user/login", payload);
+  console.log("Login successful", response.data);
 
-        navigate("/");
-      } catch (error) {
-        console.error("Login error", error);
-        setErrorMessage(
-          error.response?.data?.message || "Login failed. Please try again."
-        );
-      }
+  // Save token to localStorage
+  localStorage.setItem('token', response.data.token);
+
+  navigate("/");
+} catch (error) {
+  console.error("Login error", error);
+  setErrorMessage(
+    error.response?.data?.message || "Login failed. Please try again."
+  );
+}
+
     }
   });
 

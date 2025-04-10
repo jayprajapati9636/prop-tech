@@ -9,10 +9,11 @@ import Profile from "../Admin/pages/Profile";
 import Header from "../Admin/pages/Header";
 import Properties from "../Admin/components/Properties"
 import About from "../Admin/pages/About";
-import UserAboutpage from "../user/container/page/aboutpage";
+import Service from "../user/container/page/Service";
 import Forgot from "../user/container/auth/Forgot";
 import Navbar from "../user/container/page/Navbar";
 import Prop from "../user/container/page/Prop";
+
 
 
 const Router = () => {
@@ -23,7 +24,7 @@ const Router = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/userabout" element={< UserAboutpage />} />
+        <Route path="/service" element={<Service />}/>
         <Route path="/prop" element={< Prop/>} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/navbar" element={<Navbar />} />
