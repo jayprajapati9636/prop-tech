@@ -1,124 +1,52 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-import brokerImage from "../image/broker1.jpg";
-import { useNavigate } from "react-router-dom"; // ⬅️ import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const BrokerRegister = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
+    mobile: "",
+    address: "",
   });
 
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // ⬅️ initialize navigate
-
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
-
     try {
-      await axios.post(
-        "http://192.168.1.50:5001/api/broker/register",
-        formData
-      );
-      setMessage("🎉 Registration successful!");
-      setFormData({ name: "", email: "", password: "" });
+      const response = await fetch("http://localhost:5001/api/broker/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-      // Redirect to login after 1 second
-      setTimeout(() => {
-        navigate("/brokerlogin"); // ⬅️ navigate to login page
-      }, 1000);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Registration failed");
+
+      localStorage.setItem("token", data.token); // ✅ Save token
+      alert("Registered successfully!");
+      navigate("/broker-dashboard"); // ✅ Navigate to dashboard
+
     } catch (error) {
-      setMessage(error.response?.data?.message || "Registration failed.");
+      console.error("Registration error:", error.message);
+      alert(`Error: ${error.message}`);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black px-4">
-      <div className="flex flex-col md:flex-row items-center bg-black text-white rounded-lg overflow-hidden max-w-4xl w-full shadow-lg">
-        {/* Left Illustration */}
-        <div className="hidden md:flex md:w-1/2 justify-center items-center">
-          <img
-            src={brokerImage}
-            alt="Broker Illustration"
-            className="w-72 h-auto"
-          />
-        </div>
-
-        {/* Right Form */}
-        <div className="md:w-1/2 w-full p-8">
-          <div className="text-center mb-6">
-            <div className="text-white font-bold mb-2">DREAM PROPERTIES</div>
-            <p className="text-gray-400 text-sm">
-              Fill in this form to apply for partnership
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
-            <div className="flex items-center bg-white text-black rounded-lg px-4 py-2">
-              <FaUser className="mr-2" />
-              <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none"
-                required
-              />
-            </div>
-
-            {/* Email */}
-            <div className="flex items-center bg-white text-black rounded-lg px-4 py-2">
-              <FaEnvelope className="mr-2" />
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none"
-                required
-              />
-            </div>
-
-            {/* Password */}
-            <div className="flex items-center bg-white text-black rounded-lg px-4 py-2">
-              <FaLock className="mr-2" />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none"
-                required
-              />
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
-            >
-              NEXT
-            </button>
-
-            {/* Message */}
-            {message && (
-              <p className="text-center text-sm mt-2 text-red-400">{message}</p>
-            )}
-          </form>
-        </div>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 space-y-4 p-4 border rounded">
+      <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required className="w-full p-2 border rounded" />
+      <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="w-full p-2 border rounded" />
+      <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required className="w-full p-2 border rounded" />
+      <input type="text" name="mobile" placeholder="Mobile" value={formData.mobile} onChange={handleChange} required className="w-full p-2 border rounded" />
+      <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} required className="w-full p-2 border rounded" />
+      <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">Register</button>
+    </form>
   );
 };
 

@@ -1,69 +1,45 @@
-import React, { useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import {
-  FaHome,
-  FaPlus,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaHome, FaPlus, FaSignOutAlt } from "react-icons/fa";
 
-const BrokerSidebar = ({ isOpen, closeSidebar }) => {
-  const navigate = useNavigate(); 
-  const location = useLocation();
-  const sidebarRef = useRef(null);
-
-  const navItems = [
-    { label: "Dashboard", icon: <FaHome size={20} />, path: "/brokerdashboard" },
-    { label: "AddProperty", icon: <FaPlus size={20} />, path: "/addproperties" },
-  ];
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar && closeSidebar();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [closeSidebar]);
+const BrokerSidebar = ({ isOpen }) => {
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("brokerToken");
+    // Clear any stored data like token
+    localStorage.clear();
+    // Redirect to broker login page
     navigate("/brokerlogin");
   };
 
   return (
-    <div
-      ref={sidebarRef}
-      className={`fixed top-0 left-0 h-full bg-white shadow-lg border-r border-gray-200 transition-all duration-300 z-50 ${
-        isOpen ? "w-72" : "w-20"
-      }`}
-    >
-      <ul className="space-y-2 px-2 pt-6">
-        {navItems.map((item, index) => (
-          <li
-            key={index}
-            onClick={() => navigate(item.path)}
-            className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition-all ${
-              location.pathname === item.path ? "bg-gray-200 font-semibold" : ""
-            }`}
-          >
-            <span className="text-blue-600">{item.icon}</span>
-            {isOpen && <span className="text-gray-800">{item.label}</span>}
-          </li>
-        ))}
-      </ul>
-
-      {/* Footer / Logout */}
-      <div className="absolute bottom-6 w-full px-4">
-        <div
-          onClick={handleLogout}
-          className="flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-red-100 text-red-500 transition-all"
+    <div className="h-full flex flex-col justify-between p-4">
+      <div className="space-y-4">
+        <NavLink
+          to="/brokerdashboard"
+          className="flex items-center space-x-2 text-gray-700 hover:text-black"
         >
-          <FaSignOutAlt size={20} />
-          {isOpen && <span>Logout</span>}
-        </div>
+          <FaHome />
+          {isOpen && <span>Dashboard</span>}
+        </NavLink>
+
+        <NavLink
+          to="/addproperty"
+          className="flex items-center space-x-2 text-gray-700 hover:text-black"
+        >
+          <FaPlus />
+          {isOpen && <span>Add Property</span>}
+        </NavLink>
       </div>
+
+      {/* Logout */}
+      <button
+        onClick={handleLogout}
+        className="flex items-center space-x-2 text-red-600 hover:text-red-800"
+      >
+        <FaSignOutAlt />
+        {isOpen && <span>Logout</span>}
+      </button>
     </div>
   );
 };

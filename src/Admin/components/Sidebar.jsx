@@ -32,9 +32,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
   }, [closeSidebar]);
 
   const handleLogout = () => {
-    // Clear localStorage/sessionStorage or any auth logic
-    localStorage.removeItem("token"); // or sessionStorage.removeItem("token")
-    // Redirect to login page
+    localStorage.removeItem("token");
     navigate("/adminlogin");
   };
 
@@ -44,17 +42,19 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
       className={`fixed top-0 left-0 h-full bg-white shadow-lg border-r border-gray-200 transition-all duration-300 z-50 ${
         isOpen ? "w-72" : "w-20"
       }`}
-    > 
-      {/* <div className="p-6">
+    >
+      {/* Sidebar Header */}
+      <div className="p-6">
         <h2
           className={`text-xl font-bold text-blue-600 transition-all duration-300 ${
             !isOpen && "text-center text-sm"
           }`}
         >
-          {isOpen ? "Property Managment" : "MG"}
+          {isOpen ? "Property Management" : "PM"}
         </h2>
-      </div> */}
+      </div>
 
+      {/* Navigation */}
       <ul className="space-y-2 px-2">
         {navItems.map((item, index) => (
           <li
@@ -70,7 +70,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         ))}
       </ul>
 
-      {/* Footer / Logout */}
+      {/* Logout */}
       <div className="absolute bottom-6 w-full px-4">
         <div
           onClick={handleLogout}
