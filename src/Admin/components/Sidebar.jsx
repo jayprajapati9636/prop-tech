@@ -3,12 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
   FaBuilding,
-  FaUsers,
-  FaChartPie,
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const Sidebar = ({ isOpen, closeSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const sidebarRef = useRef(null);
@@ -16,20 +14,18 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
   const navItems = [
     { label: "Dashboard", icon: <FaHome size={20} />, path: "/admindashboard" },
     { label: "Properties", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
-    { label: "Customers", icon: <FaUsers size={20} />, path: "/customers" },
-    { label: "Reports", icon: <FaChartPie size={20} />, path: "/reports" },
   ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar();
+        if (isOpen) toggleSidebar(); // ✅ Fixed: use toggleSidebar
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [closeSidebar]);
+  }, [isOpen, toggleSidebar]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -43,14 +39,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         isOpen ? "w-72" : "w-20"
       }`}
     >
-      {/* Sidebar Header */}
+      Sidebar Header
       <div className="p-6">
         <h2
           className={`text-xl font-bold text-blue-600 transition-all duration-300 ${
             !isOpen && "text-center text-sm"
           }`}
         >
-          {isOpen ? "Property Management" : "PM"}
+          {isOpen ? "" : ""}
         </h2>
       </div>
 
