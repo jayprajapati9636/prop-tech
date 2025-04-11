@@ -4,6 +4,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { motion } from "framer-motion";
 import { Facebook as FacebookIcon, LinkedIn as LinkedInIcon, Twitter as TwitterIcon, Pinterest as PinterestIcon, Instagram as InstagramIcon } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+import Prop from "../page/Prop"
 
 function HomePage() {
   const propertyImages = [
@@ -43,7 +44,7 @@ function HomePage() {
     setOpenMenu(false);
   };
 
-  const handleRegisterClick = () => {
+  const handleProfileClick = () => {
     navigate("/register");
     setOpenMenu(false);
   };
@@ -51,9 +52,7 @@ function HomePage() {
     navigate("/")
   }
 
-  const handleDetailclick=()=>{
-    navigate("/prop");
-  }
+ 
 const handlePropertiesClick=()=>{
   navigate("/prop")
 }
@@ -63,37 +62,43 @@ const handlePropertiesClick=()=>{
   const handleServiceClick =() =>{
     navigate("/service")
   }
+  
 
   return (
     <>
       {/* Hero Section */}
       <Box sx={{ maxWidth: "100%", height: "100vh", position: "relative", textAlign: "center", color: "white" }}>
         <AppBar position="absolute" sx={{ backgroundColor: "gray" }}>
-          <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Dreame Properties
-            </Typography>
-            <Button color="inherit" onClick={handleHomeClick}>Home</Button>
-            <Button color="inherit" onClick={handlePropertiesClick} >Properties</Button>
-            <Button color="inherit" onClick={handleServiceClick} >Services</Button>
-            <Button color="inherit">Agent</Button>
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6" sx={{ flexShrink: 0 }}>
+                      Dreame Properties
+                    </Typography>
+    <Box sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center" }}>
+        <Button color="inherit" onClick={handleHomeClick}>Home</Button>
+        <Button color="inherit" onClick={handlePropertiesClick}>Properties</Button>
+                                 
+        <Button color="inherit" onClick={handleServiceClick} >Services</Button>
+                                  
+                      
+         </Box>
 
-            <IconButton edge="end" color="inherit" onClick={handleMenuClick}>
-              <AccountCircleIcon />
-            </IconButton>
+           <Box sx={{ flexShrink: 0 }}>
+                     <IconButton edge="end" color="inherit" onClick={handleMenuClick}>
+                       <AccountCircleIcon />
+                     </IconButton>
+                     <Menu
+                       anchorEl={anchorEl}
+                       open={openMenu}
+                       onClose={handleMenuClose}
+                       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                       transformOrigin={{ vertical: "top", horizontal: "right" }}
+                     >
+                       <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
 
-            <Menu
-              anchorEl={anchorEl}
-              open={openMenu}
-              onClose={handleMenuClose}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              <MenuItem onClick={handleRegisterClick}>Registration</MenuItem>
-            </Menu>
-          </Toolbar>
-        </AppBar>
-
+                     </Menu>
+                   </Box>
+                 </Toolbar>
+               </AppBar>
         <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundImage: `url(${propertyImages[currentIndex]})`, backgroundSize: "cover", backgroundPosition: "center", filter: "blur(8px)", zIndex: -1 }}></Box>
 
         <Box sx={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
@@ -117,10 +122,9 @@ const handlePropertiesClick=()=>{
           </Typography>
         </Box>
       </Box>
-
-      
+    
       <Box sx={{ padding: "50px", backgroundColor: "#f9f9f9" }}>
-  <Typography variant="h6" textAlign="center">Our Listings</Typography>
+      <Typography variant="h6" textAlign="center" >Our Listings</Typography>
   <Typography variant="h3" textAlign="center" fontWeight="bold">
     Featured <span style={{ color: "#3f51b5" }}>Properties</span>
   </Typography>
@@ -128,68 +132,14 @@ const handlePropertiesClick=()=>{
     Explore our curated selection of properties for sale and rent, including residential, commercial, and luxury options.{" "}
     <a href="#" onClick={handleViewAllClick} style={{ color: "blue", cursor: "pointer" }}>View All</a>
   </Typography>
-
   
-  <Box
-  sx={{
-    display: "flex",
-    gap: "20px",
-    overflowX: "auto",
-    padding: "20px 0",
-    scrollbarWidth: "none",
-    "&::-webkit-scrollbar": {
-      display: "none", 
-    },
-  }}
->
-    {[
-      { name: "Resort",img: "/Image/img1.jpg", price: "$250,000", bedrooms: "3 Bedrooms", rating: "★★★★☆" },
-      {name: "House", img: "/Image/img4.jpg", price: "$340,000", bedrooms: "4 Bedrooms", rating: "★★★★★" },
-      { name: "office",img: "/Image/img3.jpg", price: "$195,000", bedrooms: "2 Bedrooms", rating: "★★★☆☆" },
-      { name: "Aparment",img: "/Image/img2.jpg", price: "$280,000", bedrooms: "3 Bedrooms", rating: "★★★★☆" },
-    ].map((property, index) => (
-      <Box
-        key={index}
-        sx={{
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          overflow: "hidden",
-          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-          minWidth: "300px",
-          maxWidth: "300px",
-          flexShrink: 0,
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
-        <img
-          src={property.img}
-          alt={`Property ${index + 1}`}
-          style={{ width: "100%", height: "200px", objectFit: "cover" }}
-        />
-        <Box sx={{ padding: "15px" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "bold", color: "#2c3e50" }}>
-            {property.name}
-          </Typography>
 
-          <Typography sx={{ fontSize: "20px", fontWeight: "bold", color: "#2c3e50" }}>
-            {property.price}
-          </Typography>
-          <Typography sx={{ color: "#555", margin: "10px 0" }}>
-            {property.bedrooms}
-            
-          </Typography>
-          <Typography sx={{ color: "#f1c40f" }}>
-            Rating: {property.rating}
-          </Typography>
-          <Button variant="contained" onClick={handleDetailclick} sx={{ marginTop: "10px", backgroundColor: "#3f51b5" }}>
-            See Detail
-          </Button>
-        </Box>
+
+      <Prop />
       </Box>
-    ))}
-  </Box>
-</Box>
 
+      
+     
 
 
       {/* Footer */}
