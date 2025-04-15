@@ -77,7 +77,9 @@ function HomePage() {
   const handleServiceClick = () => {
     navigate("/service");
   };
-
+ const handleUpdateClick =() =>{
+  navigate("/updateprofile")
+ }
   return (
     <>
       {/* Hero Section */}
@@ -127,6 +129,7 @@ function HomePage() {
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
                 <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                <MenuItem onClick={handleUpdateClick}>Update</MenuItem>
               </Menu>
             </Box>
           </Toolbar>
@@ -226,7 +229,7 @@ function HomePage() {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              gap: "30px", // Adds gap between the footer columns
+              gap: "30px", 
             }}
           >
             {/* Contact Section */}

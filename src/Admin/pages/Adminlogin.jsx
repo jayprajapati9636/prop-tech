@@ -8,7 +8,10 @@ import axios from "axios";
 // ✅ Validation schema
 const schema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 const AdminLogin = () => {
@@ -34,9 +37,9 @@ const AdminLogin = () => {
 
       // ✅ Store token and email locally
       localStorage.setItem("adminToken", result.token);
-      localStorage.setItem("adminEmail", result.email); // Make sure your backend returns this
+      localStorage.setItem("adminEmail", result.email);
 
-      console.log("Stored admin email:", result.email); // ✅ Debug
+      console.log("Stored admin email:", result.email);
 
       // ✅ Navigate to dashboard
       navigate("/admindashboard");

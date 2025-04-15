@@ -33,6 +33,9 @@ const Navbar = () => {
   const handlePropertiesClick=()=>{
     navigate("/prop")
   }
+  const handleupdateClick=()=>{
+    navigate("/updateprofile")
+  }
 
   return (
     <AppBar position="absolute" sx={{ backgroundColor: "gray" }}>
@@ -65,6 +68,8 @@ const Navbar = () => {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+            <MenuItem onClick={handleupdateClick}>Update</MenuItem>
+
             
             
           </Menu>
