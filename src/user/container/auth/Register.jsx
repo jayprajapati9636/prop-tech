@@ -62,18 +62,15 @@ const Register = () => {
       };
 
       try {
-        const response = await axios.post(
-          "http://192.168.1.28:5001/api/user/register",
-          payload
-        );
+        // Choose your backend API
+        const response = await axios.post("http://192.168.150.80:5001/api/user/register", payload);
+        // const response = await axios.post("http://192.168.1.28:5001/api/user/register", payload);
+
         console.log("Server Response:", response.data);
         resetForm();
         navigate("/login");
       } catch (error) {
-        console.error(
-          "Registration Error:",
-          error.response?.data || error.message
-        );
+        console.error("Registration Error:", error.response?.data || error.message);
       } finally {
         setSubmitting(false);
       }

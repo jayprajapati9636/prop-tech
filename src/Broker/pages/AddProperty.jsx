@@ -7,6 +7,7 @@ const AddProperty = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
   const [propertyData, setPropertyData] = useState({
     name: "",
     address: "",
@@ -30,7 +31,9 @@ const AddProperty = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setPropertyData({ ...propertyData, image: files[0] });
+      const file = files[0];
+      setPropertyData({ ...propertyData, image: file });
+      setImagePreview(URL.createObjectURL(file));
     } else {
       setPropertyData({ ...propertyData, [name]: value });
     }
@@ -64,9 +67,7 @@ const AddProperty = () => {
 
       alert("✅ Property added successfully!");
       setPropertyData({ name: "", address: "", image: null });
-
-      // Navigate to dashboard to see updated property list
-      navigate("/broker/dashboard");
+      setImagePreview(null); // Clear preview
 
     } catch (err) {
       setError(err.message);
@@ -112,10 +113,18 @@ const AddProperty = () => {
               type="file"
               name="image"
               onChange={handleChange}
-              className="w-full"
+              className="w-full border px-3 py-2 rounded"
               accept="image/*"
               required
             />
+
+            {imagePreview && (
+              <div className="mt-4">
+                <p className="mb-1 text-gray-700 font-medium">Image Preview:</p>
+                <img src={imagePreview} alt="Preview" className="w-48 h-32 object-cover rounded border" />
+              </div>
+            )}
+
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button

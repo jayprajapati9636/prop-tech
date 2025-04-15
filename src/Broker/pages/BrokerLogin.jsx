@@ -29,7 +29,7 @@ const BrokerLogin = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.30:5001/api/broker/login",
+        "http://localhost:5001/api/broker/login",
         formData
       );
       const token = response.data.token;
