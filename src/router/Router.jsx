@@ -10,6 +10,7 @@ import Navbar from "../user/container/page/Navbar";
 import Prop from "../user/container/page/Prop";
 import Service from "../user/container/page/Service";
 import PropView from "../user/container/page/PropView";
+import UpdateProfile from "../user/container/auth/Update";
 
 
 
@@ -45,6 +46,7 @@ const Router = () => {
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/service" element={<Service />} />
         <Route path="/propview" element={<PropView />} />
+        <Route path="/updateprofile" element={<UpdateProfile />} />
         
         
 
