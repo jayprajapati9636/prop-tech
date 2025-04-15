@@ -43,7 +43,7 @@ const Login = () => {
       
 
       try {
-  const response = await axios.post("http://192.168.1.30:5001/api/user/login", payload);
+  const response = await axios.post("http://192.168.150.80:5001/api/user/login", payload);
   console.log("Login successful", response.data);
 
   // Save token to localStorage

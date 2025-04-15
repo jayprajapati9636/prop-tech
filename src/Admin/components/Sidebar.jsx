@@ -14,6 +14,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navItems = [
     { label: "Dashboard", icon: <FaHome size={20} />, path: "/admindashboard" },
     { label: "Properties", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
+    { label: "Users", icon: <FaBuilding size={20} />, path: "/" },
   ];
 
   useEffect(() => {

@@ -25,7 +25,7 @@ const AdminLogin = () => {
     const password = data.password;
 
     try {
-      const response = await axios.post("http://192.168.1.30:5001/api/admin/login", {
+      const response = await axios.post("http://localhost:5001/api/admin/login", {
         email,
         password,
       });
