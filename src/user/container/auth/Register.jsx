@@ -8,11 +8,6 @@ import {
   Link,
   IconButton,
   InputAdornment,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  FormHelperText
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -30,13 +25,10 @@ const signUpSchema = Yup.object({
     .required("Email is required"),
   Password: Yup.string()
     .min(6, "Password must be at least 6 characters")
-    .matches(/[A-Z]/, "Password must have at least one uppercase letter")
-    .matches(/[0-9]/, "Password must have at least one number")
-    .matches(/[!@#$%^&*]/, "Password must have at least one special character")
+    .matches(/[A-Z]/, "Must have at least one uppercase letter")
+    .matches(/[0-9]/, "Must have at least one number")
+    .matches(/[!@#$%^&*]/, "Must have at least one special character")
     .required("Password is required"),
- 
-  
-
 });
 
 const initialValues = {
@@ -58,31 +50,27 @@ const Register = () => {
     handleSubmit,
     isSubmitting,
     resetForm,
-    setSubmitting
+    setSubmitting,
   } = useFormik({
     initialValues,
     validationSchema: signUpSchema,
     onSubmit: async (values) => {
-
-      console.log(values , ":values")
-
       const payload = {
-        name: values?.Name,
-        email: values?.Email,
-        password: values?.Password,
-      }
-
-
+        name: values.Name,
+        email: values.Email,
+        password: values.Password,
+      };
 
       try {
+        // Choose your backend API
         const response = await axios.post("http://192.168.150.80:5001/api/user/register", payload);
-        console.log("Server Response:", response.data);
+        // const response = await axios.post("http://192.168.1.28:5001/api/user/register", payload);
 
+        console.log("Server Response:", response.data);
         resetForm();
         navigate("/login");
       } catch (error) {
         console.error("Registration Error:", error.response?.data || error.message);
-        
       } finally {
         setSubmitting(false);
       }
@@ -100,24 +88,35 @@ const Register = () => {
           "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <Paper
-        elevation={6}
-        sx={{ p: 4, width: 350, textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.8)" }}
+        elevation={8}
+        sx={{
+          p: 4,
+          width: 370,
+          maxWidth: "90%",
+          textAlign: "center",
+          bgcolor: "rgba(255, 255, 255, 0.9)",
+          borderRadius: 3,
+        }}
       >
-        <Typography variant="h5" gutterBottom>
-          Register
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
+          Sign Up
         </Typography>
+        <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+          Create your account to get started
+        </Typography>
+
         <form onSubmit={handleSubmit}>
-          
           {/* Full Name */}
           <TextField
             fullWidth
             label="Full Name"
             margin="normal"
-            variant="outlined"
             name="Name"
+            variant="outlined"
             value={values.Name}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -130,8 +129,8 @@ const Register = () => {
             fullWidth
             label="Email"
             margin="normal"
-            variant="outlined"
             name="Email"
+            variant="outlined"
             value={values.Email}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -143,10 +142,10 @@ const Register = () => {
           <TextField
             fullWidth
             label="Password"
-            type={showPassword ? "text" : "password"}
             margin="normal"
-            variant="outlined"
             name="Password"
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
             value={values.Password}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -155,7 +154,10 @@ const Register = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -168,7 +170,7 @@ const Register = () => {
             variant="contained"
             color="primary"
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mt: 3, py: 1.2, fontWeight: "bold" }}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Registering..." : "Register"}
@@ -176,7 +178,10 @@ const Register = () => {
         </form>
 
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Already have an account? <Link href="/login">Login</Link>
+          Already have an account?{" "}
+          <Link href="/login" underline="hover">
+            Login
+          </Link>
         </Typography>
       </Paper>
     </Box>

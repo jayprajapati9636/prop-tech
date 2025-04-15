@@ -5,11 +5,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Register from "../user/container/auth/Register";
 import Login from "../user/container/auth/Loging";
 import HomePage from "../user/container/page/Home";
-import UserAboutpage from "../user/container/page/aboutpage";
 import Forgot from "../user/container/auth/Forgot";
 import Navbar from "../user/container/page/Navbar";
 import Prop from "../user/container/page/Prop";
 import Service from "../user/container/page/Service";
+import PropView from "../user/container/page/PropView";
+
+
 
 // Admin Imports
 import Adminlogin from "../Admin/pages/Adminlogin";
@@ -29,6 +31,7 @@ import BrokerSidebar from "../Broker/components/BrokerSidebar";
 import BrokerProperties from "../Broker/pages/BrokerProperties";
 import AddProperty from "../Broker/pages/AddProperty";
 
+
 const Router = () => {
   return (
     <BrowserRouter>
@@ -37,11 +40,13 @@ const Router = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/userabout" element={<UserAboutpage />} />
         <Route path="/prop" element={<Prop />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/service" element={<Service />} />
+        <Route path="/propview" element={<PropView />} />
+        
+        
 
         {/* Admin Routes */}
         <Route path="/adminlogin" element={<Adminlogin />} />

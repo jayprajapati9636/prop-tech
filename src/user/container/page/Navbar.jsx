@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Box } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useNavigate } from "react-router-dom"; 
-
-
-// ...imports
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [cartCount, setCartCount] = useState(3);
   const navigate = useNavigate();
 
   const handleMenuClick = (event) => {
@@ -21,39 +17,46 @@ const Navbar = () => {
     setOpenMenu(false);
   };
 
-  // ✅ Moved outside
   const handleHomeClick = () => {
     navigate("/");
   };
+  
 
-  const handleRegisterClick = () => {
-    console.log('Redirect to Registration page');
+  const handleProfileClick = () => {
     navigate("/register");
     handleMenuClose();
   };
 
-  const handleUpdateProfileClick = () => {
-    navigate("/update-profile");
-    handleMenuClose();
-  };
+  const handleServiceClick =() =>{
+    navigate("/service")
+  }
+  const handlePropertiesClick=()=>{
+    navigate("/prop")
+  }
 
   return (
-    <div>
-      <AppBar position="absolute" sx={{ backgroundColor: "gray" }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dreame Properties
-          </Typography>
-          <Button color="inherit" onClick={handleHomeClick}>Home</Button>
-          <Button color="inherit">Properties</Button>
-          <Button color="inherit">Services</Button>
-          <Button color="inherit">About Us</Button>
-          <Button color="inherit">Agent</Button>
+    <AppBar position="absolute" sx={{ backgroundColor: "gray" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Left: Logo */}
+        <Typography variant="h6" sx={{ flexShrink: 0 }}>
+          Dreame Properties
+        </Typography>
 
+        {/* Center: Nav Buttons */}
+        <Box sx={{ display: "flex", gap: 2, flexGrow: 1, justifyContent: "center" }}>
+          <Button color="inherit" onClick={handleHomeClick}>Home</Button>
+         <Button color="inherit" onClick={handlePropertiesClick} >Properties</Button>
+                     
+          <Button color="inherit" onClick={handleServiceClick} >Services</Button>
+                      
+          
+        </Box>
+
+        {/* Right: User Icon */}
+        <Box sx={{ flexShrink: 0 }}>
           <IconButton edge="end" color="inherit" onClick={handleMenuClick}>
             <AccountCircleIcon />
           </IconButton>
-
           <Menu
             anchorEl={anchorEl}
             open={openMenu}
@@ -61,12 +64,13 @@ const Navbar = () => {
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
-            <MenuItem onClick={handleRegisterClick}>Registration</MenuItem>
-            <MenuItem onClick={handleUpdateProfileClick}>Update Profile</MenuItem>
+            <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+            
+            
           </Menu>
-        </Toolbar>
-      </AppBar>
-    </div>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 
