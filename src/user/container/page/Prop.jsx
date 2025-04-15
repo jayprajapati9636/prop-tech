@@ -16,7 +16,7 @@ const Prop = () => {
           throw new Error('No token found. Please log in.');
         }
 
-        const response = await axios.get('http://192.168.1.28:5001/api/user/property-list', {
+        const response = await axios.get('http://192.168.150.80:5001/api/user/property-list', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -34,6 +34,7 @@ const Prop = () => {
     fetchProperties();
   }, []);
 
+  // ✅ Pick one consistent image base URL
   const ImageURL = 'http://192.168.1.28:5001/uploads';
 
   if (loading) return <p className="text-gray-500">Loading properties...</p>;
@@ -62,8 +63,8 @@ const Prop = () => {
                     className="w-full h-48 object-cover rounded mb-3"
                   />
                 )}
-                <h3 className="text-center font-semibold">{property.name}</h3>
-                <p className="text-center text-gray-600">{property.address}</p>
+                <h3 className="text-lg font-semibold text-center">{property.name}</h3>
+                <p className="text-gray-700 text-center">{property.address}</p>
               </div>
             ))}
           </div>
@@ -91,7 +92,6 @@ const Prop = () => {
             <p className="mb-1"><strong>Landmark:</strong> {selectedProperty.landmark}</p>
             <p className="mb-1"><strong>Rooms:</strong> {selectedProperty.rooms}</p>
             <p className="mb-1"><strong>Beds:</strong> {selectedProperty.beds}</p>
-            
           </div>
         </div>
       )}
