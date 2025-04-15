@@ -61,6 +61,8 @@ const Register = () => {
         password: values.Password,
       };
 
+      console.log(payload, ":Payload");
+
       try {
         const response = await axios.post(
           "http://192.168.1.30:5001/api/user/register",
@@ -70,7 +72,10 @@ const Register = () => {
         resetForm();
         navigate("/login");
       } catch (error) {
-        console.error("Registration Error:", error.response?.data || error.message);
+        console.error(
+          "Registration Error:",
+          error.response?.data || error.message
+        );
       } finally {
         setSubmitting(false);
       }
@@ -84,7 +89,8 @@ const Register = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
+        backgroundImage:
+          "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -153,7 +159,10 @@ const Register = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
