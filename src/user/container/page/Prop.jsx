@@ -16,7 +16,7 @@ const Prop = () => {
           throw new Error('No token found. Please log in.');
         }
 
-        const response = await axios.get('http://192.168.1.30:5001/api/user/property-list', {
+        const response = await axios.get('http://192.168.1.28:5001/api/user/property-list', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -61,11 +61,9 @@ const Register = () => {
         password: values.Password,
       };
 
-      console.log(payload, ":Payload");
-
       try {
         const response = await axios.post(
-          "http://192.168.1.30:5001/api/user/register",
+          "http://192.168.1.28:5001/api/user/register",
           payload
         );
         console.log("Server Response:", response.data);
