@@ -29,6 +29,7 @@
     "react-redux": "^9.2.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.4.1",
+    "react-toastify": "^11.0.5",
     "recharts": "^2.15.1",
     "redux": "^5.0.1",
     "styled-components": "^6.1.16",

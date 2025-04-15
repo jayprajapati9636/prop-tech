@@ -7,7 +7,7 @@ import {
   Paper,
   Link,
   IconButton,
-  InputAdornment
+  InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
@@ -16,12 +16,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required")
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
 const Login = () => {
@@ -33,31 +29,23 @@ const Login = () => {
     initialValues: { email: "", password: "" },
     validationSchema,
     onSubmit: async (values) => {
-
-      console.log(values , ":values")
-
       const payload = {
-        email: values.email,  
-        password: values.password, 
+        email: values.email,
+        password: values.password,
       };
-      
 
       try {
-  const response = await axios.post("http://192.168.1.30:5001/api/user/login", payload);
-  console.log("Login successful", response.data);
-
-  
-  localStorage.setItem('token', response.data.token);
-
-  navigate("/");
-} catch (error) {
-  console.error("Login error", error);
-  setErrorMessage(
-    error.response?.data?.message || "Login failed. Please try again."
-  );
-}
-
-    }
+        const response = await axios.post("http://192.168.1.30:5001/api/user/login", payload);
+        console.log("Login successful", response.data);
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
+      } catch (error) {
+        console.error("Login error", error);
+        setErrorMessage(
+          error.response?.data?.message || "Login failed. Please try again."
+        );
+      }
+    },
   });
 
   return (
@@ -70,20 +58,25 @@ const Login = () => {
         backgroundImage:
           "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
         backgroundSize: "cover",
-        backgroundPosition: "center"
+        backgroundPosition: "center",
       }}
     >
       <Paper
-        elevation={6}
+        elevation={8}
         sx={{
           p: 4,
-          width: 350,
+          width: 370,
+          maxWidth: "90%",
           textAlign: "center",
-          bgcolor: "rgba(255, 255, 255, 0.8)"
+          bgcolor: "rgba(255, 255, 255, 0.9)",
+          borderRadius: 3,
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Login
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
+          Welcome Back
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
+          Login to your account
         </Typography>
 
         <form onSubmit={formik.handleSubmit}>
@@ -114,35 +107,44 @@ const Login = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
-              )
+              ),
             }}
           />
+
           {errorMessage && (
             <Typography color="error" sx={{ mt: 1 }}>
               {errorMessage}
             </Typography>
           )}
+
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mt: 3, py: 1.3, fontWeight: "bold" }}
           >
             Login
           </Button>
         </form>
 
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          <Link href="/forgot">Forgot Password?</Link>
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          Are you new? <Link href="/register">Register now</Link>
-        </Typography>
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="body2">
+            <Link href="/forgot" underline="hover">
+              Forgot Password?
+            </Link>
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            New here?{" "}
+            <Link href="/register" underline="hover">
+              Register now
+            </Link>
+          </Typography>
+        </Box>
       </Paper>
     </Box>
   );
