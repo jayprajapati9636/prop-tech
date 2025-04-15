@@ -13,7 +13,7 @@ const Prop = () => {
         const token = localStorage.getItem('token');
 
         if (!token) {
-          throw new Error('No token found. Please log in.');
+          throw new Error('No token found. Please try again for log in.');
         }
 
         const response = await axios.get('http://192.168.1.28:5001/api/user/property-list', {
