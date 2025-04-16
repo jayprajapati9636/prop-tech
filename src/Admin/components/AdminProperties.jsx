@@ -11,7 +11,6 @@ const PropertyPage = () => {
   const [error, setError] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
 
-  // Add property form state
   const [showForm, setShowForm] = useState(false);
   const [newName, setNewName] = useState("");
   const [newAddress, setNewAddress] = useState("");
@@ -25,11 +24,7 @@ const PropertyPage = () => {
   const fetchProperties = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-
-      // Check if token is missing or invalid
-      if (!token) {
-        return navigate("/adminlogin");
-      }
+      if (!token) return navigate("/adminlogin");
 
       const response = await axios.get("http://localhost:5001/api/admin/get-all", {
         headers: { Authorization: `Bearer ${token}` },
@@ -37,11 +32,9 @@ const PropertyPage = () => {
       setProperties(response.data);
     } catch (err) {
       if (err.response?.status === 401) {
-        // Handle token expiry or invalid token
         localStorage.removeItem("adminToken");
         navigate("/adminlogin");
       } else {
-        // Handle other errors
         setError(err.response?.data?.message || "Failed to fetch properties");
       }
     } finally {
@@ -53,18 +46,23 @@ const PropertyPage = () => {
     fetchProperties();
   }, [navigate]);
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this property?");
-    if (!confirm) return;
-
+  const togglePropertyStatus = async (id, currentStatus) => {
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.delete(`http://localhost:5001/api/admin/delets/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setProperties((prev) => prev.filter((property) => property._id !== id));
-    } catch (error) {
-      alert("Failed to delete property");
+      await axios.put(
+        `http://localhost:5001/api/admin/property/status/${id}`,
+        { isActive: !currentStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setProperties((prev) =>
+        prev.map((property) =>
+          property._id === id ? { ...property, isActive: !currentStatus } : property
+        )
+      );
+    } catch (err) {
+      alert("Failed to update property status");
     }
   };
 
@@ -76,8 +74,6 @@ const PropertyPage = () => {
 
     try {
       const token = localStorage.getItem("adminToken");
-
-      // Ensure the token exists and is valid
       if (!token) {
         setFormMessage("You must be logged in to add a property.");
         return navigate("/adminlogin");
@@ -88,12 +84,10 @@ const PropertyPage = () => {
       formData.append("address", newAddress);
       formData.append("image", newImage);
 
-      // Make the POST request to add property
       const response = await fetch("http://localhost:5001/api/property/create", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
@@ -109,7 +103,7 @@ const PropertyPage = () => {
       setNewName("");
       setNewAddress("");
       setNewImage(null);
-      fetchProperties(); // Refresh properties list
+      fetchProperties();
     } catch (err) {
       console.error(err);
       setFormMessage(err.message || "Failed to add property.");
@@ -190,7 +184,8 @@ const PropertyPage = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Property Name</th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Address</th>
-                    <th className="px-16 py-3 text-right text-sm font-medium text-gray-700">Actions</th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Status</th>
+                    <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -198,18 +193,28 @@ const PropertyPage = () => {
                     <tr key={property._id}>
                       <td className="px-6 py-4 text-gray-800 font-medium">{property.name}</td>
                       <td className="px-6 py-4 text-gray-600">{property.address || "N/A"}</td>
-                      <td className="px-6 py-4 space-x-2 text-right">
+                      <td className="px-6 py-4">
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={property.isActive}
+                            onChange={() => togglePropertyStatus(property._id, property.isActive)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer dark:bg-gray-700 peer-checked:bg-green-600 relative">
+                            <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5" />
+                          </div>
+                          <span className="ml-2 text-sm font-medium text-gray-700">
+                            {property.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </label>
+                      </td>
+                      <td className="px-6 py-4 text-right space-x-2">
                         <button
                           onClick={() => setSelectedProperty(property)}
                           className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
                         >
                           View
-                        </button>
-                        <button
-                          onClick={() => handleDelete(property._id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
-                        >
-                          Delete
                         </button>
                       </td>
                     </tr>
@@ -219,7 +224,6 @@ const PropertyPage = () => {
             </div>
           )}
 
-          {/* Modal Popup */}
           {selectedProperty && (
             <div
               className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"

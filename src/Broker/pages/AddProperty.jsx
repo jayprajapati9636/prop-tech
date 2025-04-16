@@ -1,3 +1,4 @@
+// src/pages/AddProperty.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BrokerNavbar from "../components/BrokerNavbar";
@@ -11,6 +12,7 @@ const AddProperty = () => {
   const [propertyData, setPropertyData] = useState({
     name: "",
     address: "",
+    price: "",
     image: null,
   });
 
@@ -51,6 +53,7 @@ const AddProperty = () => {
       const formData = new FormData();
       formData.append("name", propertyData.name);
       formData.append("address", propertyData.address);
+      formData.append("price", propertyData.price);
       formData.append("image", propertyData.image);
 
       const response = await fetch("http://localhost:5001/api/property/create", {
@@ -66,9 +69,8 @@ const AddProperty = () => {
       if (!response.ok) throw new Error(result.message || "Failed to add property");
 
       alert("✅ Property added successfully!");
-      setPropertyData({ name: "", address: "", image: null });
-      setImagePreview(null); // Clear preview
-
+      setPropertyData({ name: "", address: "", price: "", image: null });
+      setImagePreview(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -91,32 +93,10 @@ const AddProperty = () => {
           <h2 className="text-2xl font-bold mb-6">Add New Property</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow max-w-xl">
-            <input
-              type="text"
-              name="name"
-              placeholder="Property Name"
-              value={propertyData.name}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              required
-            />
-            <input
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={propertyData.address}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              required
-            />
-            <input
-              type="file"
-              name="image"
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              accept="image/*"
-              required
-            />
+            <input type="text" name="name" placeholder="Property Name" value={propertyData.name} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+            <input type="text" name="address" placeholder="Address" value={propertyData.address} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+            <input type="number" name="price" placeholder="Price" value={propertyData.price} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+            <input type="file" name="image" onChange={handleChange} className="w-full border px-3 py-2 rounded" accept="image/*" required />
 
             {imagePreview && (
               <div className="mt-4">
@@ -127,11 +107,7 @@ const AddProperty = () => {
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            <button
-              type="submit"
-              className={`bg-blue-600 text-white px-6 py-2 rounded ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
-              disabled={loading}
-            >
+            <button type="submit" className={`bg-blue-600 text-white px-6 py-2 rounded ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} disabled={loading}>
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
