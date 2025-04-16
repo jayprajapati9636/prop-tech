@@ -36,8 +36,8 @@ const Login = () => {
 
       try {
         // Replace with your actual backend IP if needed
-        const response = await axios.post("http://192.168.150.80:5001/api/user/login", payload);
-        // const response = await axios.post("http://192.168.1.28:5001/api/user/login", payload);
+        // const response = await axios.post("http:// 192.168.1.28:5001/api/user/login", payload);
+        const response = await axios.post("http://192.168.1.28:5001/api/user/login", payload);
 
         console.log("Login successful", response.data);
         localStorage.setItem("token", response.data.token);
