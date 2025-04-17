@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
   FaBuilding,
   FaSignOutAlt,
+  FaUserAlt, // Import user icon
 } from "react-icons/fa";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -11,10 +12,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const sidebarRef = useRef(null);
 
+  const [user, setUser] = useState(null);
+
+  // Simulate fetching user info (you can replace this with real data from your API)
+  useEffect(() => {
+    const fetchUserInfo = () => {
+      const userData = JSON.parse(localStorage.getItem("user")); // Assume user data is saved in localStorage
+      setUser(userData);
+    };
+    fetchUserInfo();
+  }, []);
+
   const navItems = [
     { label: "Dashboard", icon: <FaHome size={20} />, path: "/admindashboard" },
-    { label: "Properties", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
-    { label: "Users", icon: <FaBuilding size={20} />, path: "/" },
+    { label: "Property's", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
+    { label: "Customer's", icon: <FaUserAlt size={20} />, path: "/customer" }, // Add Users menu item with icon
   ];
 
   useEffect(() => {
@@ -40,15 +52,20 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         isOpen ? "w-72" : "w-20"
       }`}
     >
-      Sidebar Header
-      <div className="p-6">
-        <h2
-          className={`text-xl font-bold text-blue-600 transition-all duration-300 ${
-            !isOpen && "text-center text-sm"
-          }`}
-        >
-          {isOpen ? "" : ""}
-        </h2>
+      <div className="p-6 flex flex-col items-center">
+        {/* User Info */}
+        {user ? (
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              <FaUserAlt size={20} className="text-gray-600" />
+            </div>
+            {isOpen && <span className="text-gray-800 font-medium">{user.name}</span>}
+          </div>
+        ) : (
+          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+            <FaUserAlt size={20} className="text-gray-600" />
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
