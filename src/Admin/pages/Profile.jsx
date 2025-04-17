@@ -8,12 +8,7 @@ const Profile = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  // Editable fields
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -33,8 +28,6 @@ const Profile = () => {
 
         const userData = res.data.admin || res.data;
         setUser(userData);
-        setName(userData?.name || "");
-        setEmail(userData?.email || "");
       } catch (err) {
         console.error("Profile fetch error:", err);
         setError("Failed to fetch profile");
@@ -46,37 +39,8 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    try {
-      const token = localStorage.getItem("adminToken");
-
-      const res = await axios.put(
-        "http://localhost:5001/api/admin/updateprofile",
-        {
-          name,
-          email,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      setSuccess("Profile updated successfully!");
-      setUser(res.data.admin || res.data);
-    } catch (err) {
-      console.error("Profile update error:", err);
-      setError("Failed to update profile");
-    }
-  };
-
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-100 to-white">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <div
@@ -86,52 +50,35 @@ const Profile = () => {
       >
         <Header isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-        <main className="p-6 pt-24">
+        <main className="p-8 pt-24">
           {loading ? (
-            <div className="text-center mt-10">Loading profile...</div>
+            <div className="text-center text-xl text-gray-500 mt-10">Loading profile...</div>
           ) : error ? (
-            <div className="text-center text-red-500 mt-10">{error}</div>
+            <div className="text-center text-red-500 text-xl mt-10">{error}</div>
           ) : (
-            <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md mx-auto">
-              <h2 className="text-2xl font-bold text-center mb-4">Admin Profile</h2>
-              <form onSubmit={handleUpdate} className="space-y-4">
+            <div className="space-y-6 w-full max-w-md mx-auto">
+              <h2 className="text-3xl font-semibold text-center text-indigo-600 mb-4">
+                Admin Profile
+              </h2>
+
+              {/* Display Profile Information */}
+              <div className="space-y-6">
                 <div>
-                  <label className="block font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
+                  <label className="block text-lg font-medium text-gray-700">Full Name</label>
+                  <p className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-700">
+                    {user?.name || "N/A"}
+                  </p>
                 </div>
 
                 <div>
-                  <label className="block font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    className="w-full p-2 border rounded"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <label className="block text-lg font-medium text-gray-700">Email Address</label>
+                  <p className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-700">
+                    {user?.email || "N/A"}
+                  </p>
                 </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-                >
-                  Update Profile
-                </button>
-
-                {success && <p className="text-green-600 text-sm">{success}</p>}
-                {error && <p className="text-red-600 text-sm">{error}</p>}
-              </form>
-
-              <hr className="my-6" />
-              <div className="text-sm text-gray-500 text-center">
-                Logged in with: <span className="font-medium">{loginEmail || "Unknown"}</span>
               </div>
+
+              
             </div>
           )}
         </main>

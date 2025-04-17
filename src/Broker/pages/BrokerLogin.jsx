@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
-import brokerImage from "../image/broker1.jpg"; // use same image
+import { useNavigate, Link } from "react-router-dom";
+import brokerImage from "../image/broker1.jpg";
 
 const BrokerLogin = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const BrokerLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // ✅ Initialize navigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,8 +36,6 @@ const BrokerLogin = () => {
       localStorage.setItem("brokerToken", token);
       setMessage("🎉 Login successful!");
       setFormData({ email: "", password: "" });
-
-      // ✅ Redirect to dashboard
       navigate("/brokerdashboard");
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed.");
@@ -108,6 +106,17 @@ const BrokerLogin = () => {
             {message && (
               <p className="text-center text-sm mt-2 text-red-400">{message}</p>
             )}
+
+            {/* Register Link */}
+            <div className="text-center text-sm mt-4">
+              Don’t have an account?{" "}
+              <Link
+                to="/brokerregister"
+                className="text-blue-400 hover:underline hover:text-blue-300"
+              >
+                Register here
+              </Link>
+            </div>
           </form>
         </div>
       </div>

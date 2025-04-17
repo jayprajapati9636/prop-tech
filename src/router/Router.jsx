@@ -21,7 +21,7 @@ import Profile from "../Admin/pages/Profile";
 import Header from "../Admin/pages/Header";
 import AdminProperties from "../Admin/components/AdminProperties";
 import About from "../Admin/pages/About";
-import Customer from "../Admin/pages/Customer"; // Make sure this file exists
+import Customer from "../Admin/pages/Customer"
 
 // Broker Imports
 import BrokerRegister from "../Broker/pages/BrokerRegister";
@@ -29,8 +29,9 @@ import BrokerLogin from "../Broker/pages/BrokerLogin";
 import BrokerDashboard from "../Broker/components/BrokerDashboard";
 import BrokerNavbar from "../Broker/components/BrokerNavbar";
 import BrokerSidebar from "../Broker/components/BrokerSidebar";
-import BrokerProperties from "../Broker/pages/BrokerProperties";
+
 import AddProperty from "../Broker/pages/AddProperty";
+import BrokerProfile from "../Broker/components/BrokerProfile";
 
 
 const Router = () => {
@@ -57,7 +58,7 @@ const Router = () => {
         <Route path="/header" element={<Header />} />
         <Route path="/adminproperties" element={<AdminProperties />} />
         <Route path="/about" element={<About />} />
-        <Route path="/customers" element={<Customer />} />
+        <Route path="/customer" element={<Customer />} />
 
         {/* Broker Routes */}
         <Route path="/brokerregister" element={<BrokerRegister />} />
@@ -65,8 +66,8 @@ const Router = () => {
         <Route path="/brokerdashboard" element={<BrokerDashboard />} />
         <Route path="/brokernavbar" element={<BrokerNavbar />} />
         <Route path="/brokersidebar" element={<BrokerSidebar />} />
-        <Route path="/brokerproperties" element={<BrokerProperties />} />
         <Route path="/addproperty" element={<AddProperty />} />
+        <Route path="/broker/profile" element={<BrokerProfile />}/>
       </Routes>
     </BrowserRouter>
   );

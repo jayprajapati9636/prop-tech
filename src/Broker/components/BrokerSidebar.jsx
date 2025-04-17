@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaHome, FaPlus, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaSignOutAlt } from "react-icons/fa";
 
-const BrokerSidebar = ({ isOpen }) => {
+const BrokerSidebar = ({ isOpen, setIsSidebarOpen }) => {
   const navigate = useNavigate();
+  const sidebarRef = useRef(null);
 
   const handleLogout = () => {
     // Clear any stored data like token
@@ -12,34 +13,48 @@ const BrokerSidebar = ({ isOpen }) => {
     navigate("/brokerlogin");
   };
 
+  // Close sidebar when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsSidebarOpen(false); // Close sidebar
+      }
+    };
+
+    // Adding event listener on mount
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup on unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setIsSidebarOpen]);
+
   return (
-    <div className="h-full flex flex-col justify-between p-4">
-      <div className="space-y-4">
+    <div
+      ref={sidebarRef}
+      className={`h-full flex flex-col justify-between p-7 bg-white border-r border-white-200 shadow-lg transition-all duration-300 ${isOpen ? 'w-73' : 'w-20'}`}
+    >
+      <div className="space-y-6">
         <NavLink
           to="/brokerdashboard"
-          className="flex items-center space-x-2 text-gray-700 hover:text-black"
+          className="flex items-center space-x-3 text-gray-700 hover:text-black"
         >
-          <FaHome />
-          {isOpen && <span>Dashboard</span>}
-        </NavLink>
-
-        <NavLink
-          to="/addproperty"
-          className="flex items-center space-x-2 text-gray-700 hover:text-black"
-        >
-          <FaPlus />
-          {isOpen && <span>Add Property</span>}
+          <FaHome className="text-xl" />
+          {isOpen && <span className="text-lg font-semibold">Dashboard</span>}
         </NavLink>
       </div>
 
-      {/* Logout */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center space-x-2 text-red-600 hover:text-red-800"
-      >
-        <FaSignOutAlt />
-        {isOpen && <span>Logout</span>}
-      </button>
+      <div>
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center space-x-3 text-red-600 hover:text-red-800 mt-auto"
+        >
+          <FaSignOutAlt className="text-xl" />
+          {isOpen && <span className="text-lg font-semibold">Logout</span>}
+        </button>
+      </div>
     </div>
   );
 };
