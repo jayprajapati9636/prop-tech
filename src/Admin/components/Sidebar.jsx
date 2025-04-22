@@ -24,9 +24,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   }, []);
 
   const navItems = [
-    { label: "Dashboard", icon: <FaHome size={20} />, path: "/admindashboard" },
-    { label: "Property's", icon: <FaBuilding size={20} />, path: "/Adminproperties" },
-    { label: "Customer's", icon: <FaUserAlt size={20} />, path: "/customer" }, // Add Users menu item with icon
+    { label: "Dashboard", icon: <FaHome size={20} />, path: "/admin/dashboard" },
+    { label: "Property's", icon: <FaBuilding size={20} />, path: "/Admin/properties" },
+    { label: "Customer's", icon: <FaUserAlt size={20} />, path: "/admin/customer" }, // Add Users menu item with icon
   ];
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/adminlogin");
+    navigate("/admin/login");
   };
 
   return (

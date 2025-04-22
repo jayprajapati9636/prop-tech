@@ -8,7 +8,7 @@ const PropView = () => {
   const navigate = useNavigate();
   const { property } = location.state || {};
 
-  const ImageURL = 'http://192.168.1.30:5001/uploads';
+  const ImageURL = 'http://localhost:5001/uploads';
 
   if (!property) {
     return <p className="text-red-600">Property not found.</p>;

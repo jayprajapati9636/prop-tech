@@ -1,155 +1,112 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Paper,
-  Link,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import axios from "axios";
+import { FaEnvelope, FaLock } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-});
 
 const Login = () => {
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
-    validationSchema,
-    onSubmit: async (values) => {
-      const payload = {
-        email: values.email,
-        password: values.password,
-      };
-
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      setMessage("");
       try {
-        // Replace with your actual backend IP if needed
-        // const response = await axios.post("http:// 192.168.1.28:5001/api/user/login", payload);
-        const response = await axios.post("http://192.168.1.28:5001/api/user/login", payload);
-
-        console.log("Login successful", response.data);
+        const response = await axios.post("http://localhost:5001/api/user/login", values);
         localStorage.setItem("token", response.data.token);
+        resetForm();
         navigate("/");
       } catch (error) {
-        console.error("Login error", error);
-        setErrorMessage(
-          error.response?.data?.message || "Login failed. Please try again."
-        );
+        setMessage(error.response?.data?.message || "Login failed. Please try again.");
       }
     },
   });
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundImage:
-          "url('https://cdn.pixabay.com/photo/2023/12/19/22/46/house-8458547_1280.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <Paper
-        elevation={8}
-        sx={{
-          p: 4,
-          width: 370,
-          maxWidth: "90%",
-          textAlign: "center",
-          bgcolor: "rgba(255, 255, 255, 0.9)",
-          borderRadius: 3,
-        }}
-      >
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
-          Welcome Back
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
-          Login to your account
-        </Typography>
+    <div className="min-h-screen bg-gradient-to-br from-teal-900 to-teal-700 flex items-center justify-center px-4">
+      <div className="bg-[#0f1f21] text-white p-8 rounded-md shadow-2xl w-full max-w-md">
+        <h2 className="text-center text-xl tracking-widest mb-8 font-light text-white">USER LOGIN</h2>
 
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            margin="normal"
-            variant="outlined"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            margin="normal"
-            variant="outlined"
-            name="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+        <form onSubmit={formik.handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <div className="flex items-center bg-[#dcdcdc] text-black px-4 py-3 rounded-sm">
+              <FaEnvelope className="mr-3 text-gray-700" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email ID"
+                className="bg-transparent w-full outline-none placeholder:text-gray-700"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-red-400 text-sm mt-1">{formik.errors.email}</div>
+            )}
+          </div>
 
-          {errorMessage && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              {errorMessage}
-            </Typography>
-          )}
+          {/* Password */}
+          <div>
+            <div className="flex items-center bg-[#dcdcdc] text-black px-4 py-3 rounded-sm">
+              <FaLock className="mr-3 text-gray-700" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="bg-transparent w-full outline-none placeholder:text-gray-700"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
+            {formik.touched.password && formik.errors.password && (
+              <div className="text-red-400 text-sm mt-1">{formik.errors.password}</div>
+            )}
+          </div>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 3, py: 1.3, fontWeight: "bold" }}
-          >
-            Login
-          </Button>
-        </form>
-
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="body2">
-            <Link href="/forgot" underline="hover">
+          {/* Extra links */}
+          <div className="flex justify-between items-center text-sm text-gray-300">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" className="accent-white" />
+              Remember me
+            </label>
+            <Link to="/forgot" className="hover:underline">
               Forgot Password?
             </Link>
-          </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
-            New here?{" "}
-            <Link href="/register" underline="hover">
-              Register now
-            </Link>
-          </Typography>
-        </Box>
-      </Paper>
-    </Box>
+          </div>
+
+          {/* Error message */}
+          {message && <div className="text-center text-sm text-red-400">{message}</div>}
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            className="w-full bg-[#477d84] hover:bg-[#3b6b72] text-white py-3 rounded-sm font-medium tracking-wider transition duration-300"
+          >
+            LOGIN
+          </button>
+        </form>
+
+        {/* Register Link */}
+            <div className="mt-6 text-center text-sm text-gray-300">
+                    Dont have an account?{" "}
+                    <Link to="/register" className="text-blue-300 hover:underline">
+                      Register here
+                    </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

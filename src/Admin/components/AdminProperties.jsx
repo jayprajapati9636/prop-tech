@@ -29,16 +29,16 @@ const PropertyPage = () => {
   const fetchProperties = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      if (!token) return navigate("/adminlogin");
+      if (!token) return navigate("/admin/login");
 
-      const response = await axios.get("http://localhost:5001/api/admin/get-all", {
+      const response = await axios.get("http://localhost:5001/api/property/get-all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProperties(response.data);
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.removeItem("adminToken");
-        navigate("/adminlogin");
+        navigate("/admin/login");
       } else {
         setError(err.response?.data?.message || "Failed to fetch properties");
       }
@@ -159,7 +159,7 @@ const PropertyPage = () => {
                       <tr key={property._id}>
                         <td className="px-6 py-4 text-gray-800 font-medium">{property.name}</td>
                         <td className="px-6 py-4 text-gray-600">{property.address || "N/A"}</td>
-                        <td className="px-6 py-4 text-gray-600">₹{property.price || "N/A"}</td>
+                        <td className="px-6 py-4 text-gray-600">₹ {property.price || "Price Not Available"}</td>
                         <td className="px-6 py-4">
                           <label className="inline-flex items-center cursor-pointer">
                             <input
@@ -231,7 +231,7 @@ const PropertyPage = () => {
                       <span className="text-gray-600 font-medium">Address:</span> {selectedProperty.address || "Not available"}
                     </p>
                     <p className="text-lg font-semibold text-gray-800">
-                      <span className="text-gray-600 font-medium">Price:</span> ₹{selectedProperty.price || "N/A"}
+                      <span className="text-gray-600 font-medium">Price:</span> ₹ {selectedProperty.price || "Price Not Available"}
                     </p>
                     <p className="text-sm text-gray-500 mt-2 italic">
                       Status:{" "}

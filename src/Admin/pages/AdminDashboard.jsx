@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      if (!token) return navigate("/adminlogin");
+      if (!token) return navigate("/admin/login");
 
       // Fetch Properties and Customers
       const propertyResponse = await axios.get("http://localhost:5001/api/admin/get-all", {
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.removeItem("adminToken");
-        navigate("/adminlogin");
+        navigate("/admin/login");
       } else {
         setError(err.response?.data?.message || "Failed to fetch data");
       }
