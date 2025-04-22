@@ -62,7 +62,7 @@ const UpdateProfile = () => {
           const token = localStorage.getItem("token"); // adjust this if needed
       
           const response = await axios.post(
-            "http://192.168.1.28:5001/api/user/profile/update",
+            "http://localhost:5001/api/user/profile/update",
             payload,
             {
               headers: {

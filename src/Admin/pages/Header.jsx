@@ -36,8 +36,8 @@ const Header = ({ toggleSidebar }) => {
             <FaBars />
           </button>
           <Link
-            to="/admindashboard"
-            className="text-3xl font-bold tracking-wide text-white hover:text-gray-400 transition duration-300"
+            to="/admin/dashboard"
+            className="text-3xl font-bold ml-138 tracking-wide text-white hover:text-gray-400 transition duration-300"
           >
             Dream Properties
           </Link>
@@ -55,7 +55,7 @@ const Header = ({ toggleSidebar }) => {
           {showDropdown && (
             <div className="absolute right-0 mt-2 w-48 bg-gray-700 text-white rounded-lg shadow-lg py-2 z-50">
               <Link
-                to="/profile"
+                to="/admin/profile"
                 className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
                 onClick={() => setShowDropdown(false)}
               >

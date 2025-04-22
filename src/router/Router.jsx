@@ -52,21 +52,21 @@ const Router = () => {
         
 
         {/* Admin Routes */}
-        <Route path="/adminlogin" element={<Adminlogin />} />
-        <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/login" element={<Adminlogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/profile" element={<Profile />} />
         <Route path="/header" element={<Header />} />
-        <Route path="/adminproperties" element={<AdminProperties />} />
+        <Route path="/admin/properties" element={<AdminProperties />} />
         <Route path="/about" element={<About />} />
-        <Route path="/customer" element={<Customer />} />
+        <Route path="/admin/customer" element={<Customer />} />
 
         {/* Broker Routes */}
-        <Route path="/brokerregister" element={<BrokerRegister />} />
-        <Route path="/brokerlogin" element={<BrokerLogin />} />
-        <Route path="/brokerdashboard" element={<BrokerDashboard />} />
-        <Route path="/brokernavbar" element={<BrokerNavbar />} />
-        <Route path="/brokersidebar" element={<BrokerSidebar />} />
-        <Route path="/addproperty" element={<AddProperty />} />
+        <Route path="/broker/register" element={<BrokerRegister />} />
+        <Route path="/broker/login" element={<BrokerLogin />} />
+        <Route path="/broker/dashboard" element={<BrokerDashboard />} />
+        <Route path="/broker/navbar" element={<BrokerNavbar />} />
+        <Route path="/broker/sidebar" element={<BrokerSidebar />} />
+        <Route path="/add/property" element={<AddProperty />} />
         <Route path="/broker/profile" element={<BrokerProfile />}/>
       </Routes>
     </BrowserRouter>

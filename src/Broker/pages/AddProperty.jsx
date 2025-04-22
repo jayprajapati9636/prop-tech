@@ -56,7 +56,7 @@ const AddProperty = () => {
       formData.append("price", propertyData.price);
       formData.append("image", propertyData.image);
 
-      const response = await fetch("http://localhost:5001/api/property/create", {
+      const response = await fetch("http://localhost:5001/api/broker/property", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

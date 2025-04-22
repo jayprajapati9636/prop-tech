@@ -21,7 +21,7 @@ const UsersPage = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      if (!token) return navigate("/adminlogin");
+      if (!token) return navigate("/admin/login");
 
       const response = await axios.get("http://localhost:5001/api/admin/customers", {
         headers: {

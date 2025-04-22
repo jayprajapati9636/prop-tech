@@ -10,7 +10,7 @@ const BrokerSidebar = ({ isOpen, setIsSidebarOpen }) => {
     // Clear any stored data like token
     localStorage.clear();
     // Redirect to broker login page
-    navigate("/brokerlogin");
+    navigate("/broker/login");
   };
 
   // Close sidebar when clicking outside of it
@@ -37,11 +37,11 @@ const BrokerSidebar = ({ isOpen, setIsSidebarOpen }) => {
     >
       <div className="space-y-6">
         <NavLink
-          to="/brokerdashboard"
+          to="/broker/dashboard"
           className="flex items-center space-x-3 text-gray-700 hover:text-black"
         >
           <FaHome className="text-xl" />
-          {isOpen && <span className="text-lg font-semibold">Dashboard</span>}
+          {isOpen && <span className="text-lg font-semibold">Property's</span>}
         </NavLink>
       </div>
 
